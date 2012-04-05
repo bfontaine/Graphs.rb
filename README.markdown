@@ -6,8 +6,8 @@ GDF Module
 
 The GDF module is used to parse
 [GDF](http://guess.wikispot.org/The_GUESS_.gdf_format) files using the unique method
-`GDF.parse(filename)`. It returns a `GDF::Graph` object, which provide two
-attributes: `nodes` and `edges`
+`GDF.parse(filename)`. It returns a `GDF::Graph` object which provide two
+read-write attributes: `nodes` and `edges`.
 
 Example
 -------
