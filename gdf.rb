@@ -3,6 +3,7 @@
 module GDF
 
     class GDF::Graph
+
         @nodes = []
         @edges = []
 
@@ -17,6 +18,7 @@ module GDF
     def self.parse(filename)
         ct = File.read(filename).split("\n")
 
+        # lines index of 'nodedef>' and 'edgedef>'
         nodes_def_index = -1
         edges_def_index = -1
 
@@ -32,6 +34,7 @@ module GDF
             end
         }
 
+        # no edges
         if (edges_def_index == -1)
             edges = []
             edges_def_index = ct.length
@@ -39,6 +42,7 @@ module GDF
             edges = ct[edges_def_index+1..ct.length]
         end
 
+        # only nodes lines
         nodes = ct[nodes_def_index+1..[edges_def_index-1, ct.length].min] || []
 
         nodes_def = ct[nodes_def_index]
@@ -60,6 +64,7 @@ module GDF
             return GDF::Graph.new(nodes)
         end
 
+        # only edges lines
         edges_def = ct[edges_def_index]
         edges_def = edges_def["edgedef>".length..edges_def.length].strip.split(",")
         edges_def.each_index {|i|
@@ -77,6 +82,4 @@ module GDF
 
         GDF::Graph.new(nodes, edges)
     end
-
-
 end
