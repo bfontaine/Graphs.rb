@@ -23,9 +23,9 @@ module GDF
         edges_def_index = -1
 
         ct.each_with_index {|l,i|
-            if l.starts_with? 'nodedef>'
+            if l.start_with? 'nodedef>'
                 nodes_def_index = i
-            elsif l.starts_with? 'edgedef>'
+            elsif l.start_with? 'edgedef>'
                 edges_def_index = i
             end
 
