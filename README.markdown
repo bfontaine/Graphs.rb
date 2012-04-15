@@ -38,7 +38,5 @@ We can now access nodes
 and edges
 
      irb> g.edges
-     => [{'node1'=>'Bar', 'node2'=>'Foo', 'day'=>'62', 'duration'=>'14'},
-         {'node1'=>'Foo', 'node2'=>'Bar', 'day'=>'154', 'duration'=>'7'}]
-
-Note that the GDF module does not yet support value types (all values are strings).
+     => [{'node1'=>'Bar', 'node2'=>'Foo', 'day'=>62, 'duration'=>14},
+         {'node1'=>'Foo', 'node2'=>'Bar', 'day'=>154, 'duration'=>7}]
