@@ -15,8 +15,12 @@ module GDF
         end
     end
 
-    def self.parse(filename)
-        content = File.read(filename).split("\n")
+    def self.load(filename)
+        self.parse(File.read(filename))
+    end
+
+    def self.parse(content)
+        content = content.split("\n")
 
         # lines index of 'nodedef>' and 'edgedef>'
         nodes_def_index = -1
@@ -84,6 +88,17 @@ module GDF
 
         GDF::Graph.new(nodes, edges)
     end
+
+    #def self.unparse(graph)
+    #    gdf_s = 'nodedef>'
+
+    #    keys = (graph.nodes[0].nil?) ? [] : graph.nodes[0].keys
+    #    # TODO gdf += "#{key_name} #{key_value_type}, …\n"
+    #    #      gdf += nodes values
+    #    # idem with edges
+
+    #    gdf_s
+    #end
 
     private
 
