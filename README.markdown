@@ -27,7 +27,7 @@ Then, using `irb`, we use the `GDF` module:
      $ irb
      irb> require './gdf'
      => true
-     irb> g = GDF::parse 'trips.gdf'
+     irb> g = GDF::load 'trips.gdf'
      […]
 
 We can now access nodes
