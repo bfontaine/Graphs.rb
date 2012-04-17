@@ -89,18 +89,23 @@ module GDF
         GDF::Graph.new(nodes, edges)
     end
 
-    #def self.unparse(graph)
-    #    gdf_s = 'nodedef>'
+    def self.unparse(graph)
+        gdf_s = 'nodedef>'
 
-    #    keys = (graph.nodes[0].nil?) ? [] : graph.nodes[0].keys
-    #    # TODO gdf += "#{key_name} #{key_value_type}, …\n"
-    #    #      gdf += nodes values
-    #    # idem with edges
+        keys = (graph.nodes[0].nil?) ? [] : graph.nodes[0].keys
+        # TODO gdf += "#{key_name} #{key_value_type}, …\n"
+        #      gdf += nodes values
+        # idem with edges
 
-    #    gdf_s
-    #end
+        gdf_s
+    end
 
     private
+
+    # read the value of a node|edge field, and return the value's type (String)
+    def self.write_def(v)
+        #TODO
+    end
 
     # read a (node|edge)def, and return ['label', 'type of value']
     def self.read_def(s)
