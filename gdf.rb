@@ -20,6 +20,11 @@ module GDF
     end
 
     def self.parse(content)
+
+        if (content.nil? || content.length == 0)
+            return GDF::Graph.new([],[])
+        end
+
         content = content.split("\n")
 
         # lines index of 'nodedef>' and 'edgedef>'
@@ -57,7 +62,7 @@ module GDF
 
         nodes.each_with_index {|n,i|
             n2 = {}
-            n = n.split(',')
+            n = n.split /\s*,\s*/
             n.zip(nodes_def).each {|val,label_type|
                 label, type = label_type
                 n2[label] = parse_field(val, type)
@@ -78,7 +83,8 @@ module GDF
 
         edges.each_with_index {|e,i|
             e2 = {}
-            e = e.split(',')
+            e = e.split /\s*,\s*/
+
             e.zip(edges_def).each {|val,label_type|
                 label, type = label_type
                 e2[label] = parse_field(val, type)
