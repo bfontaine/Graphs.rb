@@ -29,7 +29,6 @@ Then, using `irb`, we use the `GDF` module:
      irb> require './gdf'
      => true
      irb> g = GDF::load 'trips.gdf'
-     […]
 
 We can now access nodes
 
@@ -42,7 +41,7 @@ and edges
      => [{'node1'=>'Bar', 'node2'=>'Foo', 'day'=>62, 'duration'=>14},
          {'node1'=>'Foo', 'node2'=>'Bar', 'day'=>154, 'duration'=>7}]
 
-now, we can add a node an a edge
+now, we can add a node and an edge
 
     => g.nodes += {'name'=>'John', country=>'USA'}
     => g.edges += {'node1'=>'John', 'node2'=>'Foo', 'day'=>42, 'duration'=>12}
@@ -55,8 +54,8 @@ and we can save our new graph in a new file
 Documentation
 -------------
 
-- `GDF::Graph` : a graph object, with `nodes` and `edges` attributes
-- `GDF::Graph.new(nodes[, edges])` : create a new `GDF::Graph` object
-- `GDF::Graph#write(filename)` : write the current graph object into a file
-- `GDF::load(filename)` : parse the content of a GDF file, and return a new graph object
+- `GDF::Graph`: a graph object, with `nodes` and `edges` attributes
+- `GDF::Graph.new(nodes[, edges])`: create a new `GDF::Graph` object
+- `GDF::Graph#write(filename)`: write the current graph object into a file
+- `GDF::load(filename)`: parse the content of a GDF file, and return a new graph object
 
