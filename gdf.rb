@@ -13,6 +13,13 @@ module GDF
             @nodes = nodes || []
             @edges = edges || []
         end
+
+        def ==(other)
+            if (!other.is_a?(GDF::Graph))
+                return false
+            end
+            (self.nodes === other.nodes) && (self.edges == other.edges)
+        end
     end
 
     def self.load(filename)
