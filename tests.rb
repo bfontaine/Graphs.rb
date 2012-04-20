@@ -11,6 +11,10 @@ class GDF_test < Test::Unit::TestCase
     @@sample_graph_1 += "toto, lala, true\nlala, titi, true\n"
     @@sample_graph_1 += "titi, lala, false\ntiti, toto, true\n"
 
+    def get_sample_filename
+        "/tmp/test_graph_#{rand(9999)}.gdf"
+    end
+
     # == GDF::Graph.new == #
 
     def test_new_empty_graph
@@ -18,6 +22,37 @@ class GDF_test < Test::Unit::TestCase
 
         assert_equal([], g.nodes)
         assert_equal([], g.edges)
+    end
+
+    # == GDF::Graph#write == #
+
+    def test_write_empty_graph
+
+        f = get_sample_filename
+
+        g = GDF::Graph.new(nil)
+        g.write(f)
+
+        assert_equal(true, File.exists?(f))
+        
+        content = File.read(f)
+
+        assert_equal('nodedef>', content)
+    end
+
+    def test_write_sample_graph
+
+        f = get_sample_filename
+
+        GDF::parse(@@sample_graph_1).write(f)
+
+        assert_equal(true, File.exists?(f))
+
+        content = File.read(f)
+
+        g = GDF::unparse(@@sample_graph_1)
+
+        assert_equal(g, content)
     end
 
     # == GDF::parse == #

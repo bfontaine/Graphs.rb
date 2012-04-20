@@ -20,6 +20,9 @@ module GDF
             end
             (self.nodes === other.nodes) && (self.edges == other.edges)
         end
+
+        def write(filename)
+        end
     end
 
     def self.load(filename)
