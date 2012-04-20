@@ -51,18 +51,20 @@ module GDF
             edges = content[edges_def_index+1..content.length]
         end
 
+        fields_split = /[\t ]*,[\t ]*/
+
         # only nodes lines
         nodes = content[nodes_def_index+1..[edges_def_index-1, content.length].min] || []
 
         nodes_def = content[nodes_def_index]
-        nodes_def = nodes_def['nodedef>'.length..nodes_def.length].strip.split(',')
+        nodes_def = nodes_def['nodedef>'.length..nodes_def.length].strip.split(fields_split)
         nodes_def.each_index {|i|
             nodes_def[i] = read_def(nodes_def[i])
         }
 
         nodes.each_with_index {|n,i|
             n2 = {}
-            n = n.split /\s*,\s*/
+            n = n.split(fields_split)
             n.zip(nodes_def).each {|val,label_type|
                 label, type = label_type
                 n2[label] = parse_field(val, type)
@@ -76,14 +78,14 @@ module GDF
 
         # only edges lines
         edges_def = content[edges_def_index]
-        edges_def = edges_def['edgedef>'.length..edges_def.length].strip.split(',')
+        edges_def = edges_def['edgedef>'.length..edges_def.length].strip.split(fields_split)
         edges_def.each_index {|i|
             edges_def[i] = read_def(edges_def[i])
         }
 
         edges.each_with_index {|e,i|
             e2 = {}
-            e = e.split /\s*,\s*/
+            e = e.split(fields_split)
 
             e.zip(edges_def).each {|val,label_type|
                 label, type = label_type
