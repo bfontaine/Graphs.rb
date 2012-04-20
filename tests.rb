@@ -11,14 +11,25 @@ class GDF_test < Test::Unit::TestCase
     @@sample_graph_1 += "toto, lala, true\nlala, titi, true\n"
     @@sample_graph_1 += "titi, lala, false\ntiti, toto, true\n"
 
-    def test_empty_graph
+    # == GDF::Graph.new == #
+
+    def test_new_empty_graph
+        g = GDF::Graph.new(nil)
+
+        assert_equal([], g.nodes)
+        assert_equal([], g.edges)
+    end
+
+    # == GDF::parse == #
+
+    def test_parse_empty_graph
         g = GDF::parse('')
 
         assert_equal([], g.nodes)
         assert_equal([], g.edges)
     end
 
-    def test_empty_graph_with_nodedef
+    def test_parse_empty_graph_with_nodedef
 
         s = "nodedef>label VARCHAR\n" 
 
@@ -28,7 +39,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_empty_graph_with_nodedef_and_edgedef
+    def test_parse_empty_graph_with_nodedef_and_edgedef
         s = "nodedef>label VARCHAR\nedgedef>node1 VARCHAR,node2 VARCHAR\n"
         g = GDF::parse(s)
 
@@ -36,7 +47,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_string_field
+    def test_parse_one_node_no_edge_string_field
         s = "nodedef>label VARCHAR\nfoo\n"
         g = GDF::parse(s)
 
@@ -45,7 +56,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_tinyint_field
+    def test_parse_one_node_no_edge_tinyint_field
         s = "nodedef>num TINYINT\n3\n"
         g = GDF::parse(s)
 
@@ -54,7 +65,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_smallint_field
+    def test_parse_one_node_no_edge_smallint_field
         s = "nodedef>num SMALLINT\n3\n"
         g = GDF::parse(s)
 
@@ -63,7 +74,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_int_field
+    def test_parse_one_node_no_edge_int_field
         s = "nodedef>num INT\n3\n"
         g = GDF::parse(s)
 
@@ -72,7 +83,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_negative_int_field
+    def test_parse_one_node_no_edge_negative_int_field
         s = "nodedef>num INT\n-1337\n"
         g = GDF::parse(s)
 
@@ -81,7 +92,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_bigint_field
+    def test_parse_one_node_no_edge_bigint_field
         s = "nodedef>num BIGINT\n3\n"
         g = GDF::parse(s)
 
@@ -90,7 +101,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_float_field
+    def test_parse_one_node_no_edge_float_field
         s = "nodedef>num FLOAT\n3\n"
         g = GDF::parse(s)
 
@@ -99,7 +110,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_double_field
+    def test_parse_one_node_no_edge_double_field
         s = "nodedef>num FLOAT\n3\n"
         g = GDF::parse(s)
 
@@ -108,7 +119,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_real_field
+    def test_parse_one_node_no_edge_real_field
         s = "nodedef>num FLOAT\n3\n"
         g = GDF::parse(s)
 
@@ -117,7 +128,7 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_negative_real_field
+    def test_parse_one_node_no_edge_negative_real_field
         s = "nodedef>num FLOAT\n-42.14\n"
         g = GDF::parse(s)
 
@@ -126,19 +137,12 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
-    def test_one_node_no_edge_unknow_field_type
+    def test_parse_one_node_no_edge_unknow_field_type
         s = "nodedef>foo BAR\nfoobar"
         g = GDF::parse(s)
 
         assert_equal(1, g.nodes.length)
         assert_equal('foobar', g.nodes[0]['foo'])
-        assert_equal([], g.edges)
-    end
-
-    def test_new_empty_graph
-        g = GDF::Graph.new(nil)
-
-        assert_equal([], g.nodes)
         assert_equal([], g.edges)
     end
 
@@ -158,10 +162,21 @@ class GDF_test < Test::Unit::TestCase
 
     end
 
-    def test_parse_unparse_sample_graph
-        s = GDF::unparse(GDF::parse(@@sample_graph_1))
+    # == GDF::unparse == #
 
-        assert_equal(@@sample_graph_1, s)
+    def test_unparse_empty_graph
+        g = GDF::Graph.new(nil)
+
+        s = GDF::unparse(g)
+
+        assert_equal("nodedef>", s)
+    end
+
+    def test_unparse_sample_graph
+        g1 = GDF::parse(@@sample_graph_1)
+        g2 = GDF::parse(GDF::unparse(g1))
+
+        assert_equal(g1, g2)
     end
 
 end
