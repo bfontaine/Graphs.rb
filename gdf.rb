@@ -22,6 +22,9 @@ module GDF
         end
 
         def write(filename)
+            f = File.open(filename, 'w')
+            f.write(GDF::unparse(self))
+            f.close
         end
     end
 

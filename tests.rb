@@ -50,9 +50,10 @@ class GDF_test < Test::Unit::TestCase
 
         content = File.read(f)
 
-        g = GDF::unparse(@@sample_graph_1)
+        g0 = GDF::parse(@@sample_graph_1)
+        g1 = GDF::parse(content)
 
-        assert_equal(g, content)
+        assert_equal(g0, g1)
     end
 
     # == GDF::parse == #
