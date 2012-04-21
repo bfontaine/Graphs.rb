@@ -57,7 +57,7 @@ the `set_default` method:
 
 Note that the `set_default` method is defined for `edges` and `nodes`. It
 accepts multiple arguments, and you only need to call it once, it will work for
-every new node or edge (just use `.push` method to add news).
+every new node or edge (just use `.push` method to add new ones).
 
 then, we can save our new graph in a new file
 
