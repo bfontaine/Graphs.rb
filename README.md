@@ -43,14 +43,14 @@ and edges
 
 now, we can add a node and an edge
 
-    => g.nodes.push {'name'=>'John', country=>'USA'}
-    => g.edges.push {'node1'=>'John', 'node2'=>'Foo', 'day'=>42, 'duration'=>12}
+    irb> g.nodes.push {'name'=>'John', country=>'USA'}
+    irb> g.edges.push {'node1'=>'John', 'node2'=>'Foo', 'day'=>42, 'duration'=>12}
 
 but we forgot that all edges are directed ones. That's ok, just use
 the `set_default` method:
 
-    => g.edges.set_default 'directed' => true
-    => g.edges
+    irb> g.edges.set_default 'directed' => true
+    irb> g.edges
     => [{'node1'=>'Bar', 'node2'=>'Foo', …, 'directed'=>true},
         {'node1'=>'Foo', 'node2'=>'Bar', …, 'directed'=>true},
         {'node1'=>'John', 'node2'=>'Foo', …, 'directed'=>true}]
@@ -61,7 +61,7 @@ every new node or edge.
 
 then, we can save our new graph in a new file
 
-    => g.write('new_trips.gdf')
+    irb> g.write('new_trips.gdf')
 
 
 Documentation
