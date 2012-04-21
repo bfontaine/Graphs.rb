@@ -18,10 +18,19 @@ class GDF_test < Test::Unit::TestCase
     # == GDF::Graph.new == #
 
     def test_new_empty_graph
-        g = GDF::Graph.new(nil)
+        g = GDF::Graph.new
 
         assert_equal([], g.nodes)
         assert_equal([], g.edges)
+    end
+
+    # == GDF::Graph#== == #
+
+    def test_equal_graphs
+        g1 = GDF::parse(@@sample_graph_1)
+        g2 = GDF::parse(@@sample_graph_1)
+
+        assert_equal(true, g1==g2)
     end
 
     # == GDF::Graph#write == #
@@ -30,7 +39,7 @@ class GDF_test < Test::Unit::TestCase
 
         f = get_sample_filename
 
-        g = GDF::Graph.new(nil)
+        g = GDF::Graph.new
         g.write(f)
 
         assert_equal(true, File.exists?(f))
@@ -54,6 +63,80 @@ class GDF_test < Test::Unit::TestCase
         g1 = GDF::parse(content)
 
         assert_equal(g0, g1)
+    end
+
+    # == GDF::Graph::NodeArray#set_default == #
+
+    def test_nodearray_set_default_unexisting_property
+        g = GDF::Graph.new([{'name'=>'foo'}, {'name'=>'bar'}])
+        g.nodes.set_default 'age' => 21
+
+        assert_equal(21, g.nodes[0]['age'])
+        assert_equal(21, g.nodes[1]['age'])
+    end
+
+    def test_nodearray_set_default_existing_property
+        g = GDF::Graph.new([{'name'=>'foo', 'age'=>42}, {'name'=>'bar'}])
+        g.nodes.set_default 'age' => 21
+
+        assert_equal(21, g.nodes[0]['age'])
+        assert_equal(21, g.nodes[1]['age'])
+    end
+
+    def test_nodearray_set_default_unexisting_property_before_push
+        g = GDF::Graph.new([{'name'=>'foo'}])
+        g.nodes.set_default 'city' => 'Paris'
+        g.nodes.push({'name' => 'bar'})
+
+        assert_equal('Paris', g.nodes[0]['city'])
+        assert_equal('Paris', g.nodes[0]['city'])
+    end
+
+    def test_nodearray_set_default_existing_property_before_push
+        g = GDF::Graph.new([{'name'=>'foo', 'city'=>'London'}])
+        g.nodes.set_default 'city' => 'Paris'
+        g.nodes.push({'name' => 'bar'})
+
+        assert_equal('Paris', g.nodes[0]['city'])
+        assert_equal('Paris', g.nodes[0]['city'])
+    end
+
+    # == GDF::Graph::edgeArray#set_default == #
+
+    def test_edgearray_set_default_unexisting_property
+        g = GDF::Graph.new([],[{'node1'=>'foo', 'node2'=>'bar'}])
+        g.edges.set_default 'directed' => true
+
+        assert_equal(true, g.edges[0]['directed'])
+    end
+
+    def test_edgearray_set_default_existing_property
+        g = GDF::Graph.new([],
+                           [{'node1'=>'foo', 'node2'=>'bar', 'directed'=>true},
+                            {'node1'=>'bar', 'node2'=>'foo'}])
+        g.edges.set_default 'directed' => false
+
+        assert_equal(false, g.edges[0]['directed'])
+        assert_equal(false, g.edges[1]['directed'])
+    end
+
+    def test_edgearray_set_default_unexisting_property_before_push
+        g = GDF::Graph.new([], [{'node1'=>'foo', 'node2'=>'bar'}])
+        g.edges.set_default 'directed' => true
+        g.edges.push({'node1' => 'bar', 'node2'=>'foo'})
+
+        assert_equal(true, g.edges[0]['directed'])
+        assert_equal(true, g.edges[0]['directed'])
+    end
+
+    def test_edgearray_set_default_existing_property_before_push
+        g = GDF::Graph.new([],
+                           [{'node1'=>'foo', 'node2'=>'bar', 'directed'=>true}])
+        g.edges.set_default 'node2' => 'foo'
+        g.edges.push({'node1' => 'bar', 'node2' => 'foo'})
+
+        assert_equal('foo', g.edges[0]['node2'])
+        assert_equal('foo', g.edges[0]['node2'])
     end
 
     # == GDF::parse == #
@@ -201,7 +284,7 @@ class GDF_test < Test::Unit::TestCase
     # == GDF::unparse == #
 
     def test_unparse_empty_graph
-        g = GDF::Graph.new(nil)
+        g = GDF::Graph.new
 
         s = GDF::unparse(g)
 
