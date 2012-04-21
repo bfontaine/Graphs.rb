@@ -43,10 +43,23 @@ and edges
 
 now, we can add a node and an edge
 
-    => g.nodes += {'name'=>'John', country=>'USA'}
-    => g.edges += {'node1'=>'John', 'node2'=>'Foo', 'day'=>42, 'duration'=>12}
+    => g.nodes.push {'name'=>'John', country=>'USA'}
+    => g.edges.push {'node1'=>'John', 'node2'=>'Foo', 'day'=>42, 'duration'=>12}
 
-and we can save our new graph in a new file
+but we forgot that all edges are directed ones. That's ok, just use
+the `set_default` method:
+
+    => g.edges.set_default 'directed' => true
+    => g.edges
+    => [{'node1'=>'Bar', 'node2'=>'Foo', …, 'directed'=>true},
+        {'node1'=>'Foo', 'node2'=>'Bar', …, 'directed'=>true},
+        {'node1'=>'John', 'node2'=>'Foo', …, 'directed'=>true}]
+
+Note that the `set_default` method is defined for `edges` **and** `nodes`. It
+accepts multiple arguments, and you only need to call it once, it will work for
+every new node or edge.
+
+then, we can save our new graph in a new file
 
     => g.write('new_trips.gdf')
 
@@ -57,5 +70,11 @@ Documentation
 - `GDF::Graph`: a graph object, with `nodes` and `edges` attributes
 - `GDF::Graph.new(nodes[, edges])`: create a new `GDF::Graph` object
 - `GDF::Graph#write(filename)`: write the current graph object into a file
+- `GDF::Graph::NodeArray`: sort of `Array`, with a `set_default` method
+- `GDF::Graph::EdgeArray`: same as `GDF::Graph::NodeArray`
+- `GDF::Graph::NodeArray#set_default({ k=>v[,…] })`: set some defaults values
+  for each node of the current graph object.
+- `GDF::Graph::EdgeArray#set_default({ k=>v[,…] })`: set some defaults values
+  for each edge of the current graph object.
 - `GDF::load(filename)`: parse the content of a GDF file, and return a new graph object
 
