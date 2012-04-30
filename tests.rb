@@ -139,6 +139,43 @@ class GDF_test < Test::Unit::TestCase
         assert_equal('foo', g.edges[0]['node2'])
     end
 
+    # == GDF::Graph#& == #
+
+    def test_empty_graph_AND_empty_graph
+        g1 = GDF::Graph.new
+        g2 = GDF::Graph.new
+
+        assert_equal(g1, g1 & g2)
+    end
+
+    def test_one_node_graph_AND_empty_graph
+        g = GDF::Graph.new([{'label'=>'foo'}])
+        empty = GDF::Graph.new
+
+        assert_equal(empty, g & empty)
+    end
+
+    def test_empty_graph_AND_one_node_graph
+        g = GDF::Graph.new([{'label'=>'foo'}])
+        empty = GDF::Graph.new
+
+        assert_equal(empty, empty & g)
+    end
+
+    def test_sample_graph_AND_itself
+        g = GDF::parse(@@sample_graph_1)
+
+        assert_equal(g, g & g)
+    end
+
+    def test_one_node_graph_AND_one_other_node_graph
+        g = GDF::Graph.new([{'label'=>'foo'}])
+        h = GDF::Graph.new([{'label'=>'bar'}])
+        empty = GDF::Graph.new
+
+        assert_equal(empty, g & h)
+    end
+
     # == GDF::parse == #
 
     def test_parse_empty_graph
