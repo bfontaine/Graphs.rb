@@ -176,6 +176,17 @@ class GDF_test < Test::Unit::TestCase
         assert_equal(empty, g & h)
     end
 
+    def test_sample_graph_AND_no_graph
+        g = GDF::parse(@@sample_graph_1)
+
+        assert_equal(nil, g & 2)
+        assert_equal(nil, g & true)
+        assert_equal(nil, g & false)
+        assert_equal(nil, g & ['foo', 'bar'])
+        assert_equal(nil, g & {'foo'=>'bar'})
+        assert_equal(nil, g & 'foo')
+    end
+
     # == GDF::parse == #
 
     def test_parse_empty_graph

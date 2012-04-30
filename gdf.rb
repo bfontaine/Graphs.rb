@@ -46,6 +46,12 @@ module GDF
             (self.nodes === other.nodes) && (self.edges == other.edges)
         end
 
+        def &(other)
+            if (!other.is_a?(GDF::Graph))
+                return nil
+            end
+        end
+
         def write(filename)
             f = File.open(filename, 'w')
             f.write(GDF::unparse(self))
