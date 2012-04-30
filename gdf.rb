@@ -50,6 +50,11 @@ module GDF
             if (!other.is_a?(GDF::Graph))
                 return nil
             end
+
+            nodes = @nodes & other.nodes
+            edges = @edges & other.edges
+
+            GDF::Graph.new(nodes, edges)
         end
 
         def write(filename)
