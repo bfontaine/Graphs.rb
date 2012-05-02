@@ -29,9 +29,6 @@ module GDF
         class EdgeArray < NodeArray
         end
 
-        @nodes = NodeArray.new([])
-        @edges = EdgeArray.new([])
-
         attr_accessor :nodes, :edges
 
         def initialize(nodes=nil, edges=nil)

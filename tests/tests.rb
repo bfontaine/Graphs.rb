@@ -1,6 +1,6 @@
 #! /usr/bin/ruby1.9.1
 
-require './gdf'
+require '../src/gdf'
 require 'test/unit'
 
 class GDF_test < Test::Unit::TestCase
