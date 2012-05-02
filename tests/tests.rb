@@ -1,74 +1,51 @@
 #! /usr/bin/ruby1.9.1
 
+require '../src/graph'
 require '../src/gdf'
+require '../src/gexf'
 require 'test/unit'
 
-class GDF_test < Test::Unit::TestCase
+def get_sample_filename
+    "/tmp/test_graph_#{rand(9999)}.gdf"
+end
 
-    @@sample_graph_1  = "nodedef>label VARCHAR, num INT, biglabel VARCHAR\n"
-    @@sample_graph_1 += "toto, 14, TOTO\nlala, 5, LALA\ntiti, 988, TITI\n"
-    @@sample_graph_1 += "edgedef>node1 VARCHAR, node2 VARCHAR, directed BOOLEAN\n"
-    @@sample_graph_1 += "toto, lala, true\nlala, titi, true\n"
-    @@sample_graph_1 += "titi, lala, false\ntiti, toto, true\n"
 
-    def get_sample_filename
-        "/tmp/test_graph_#{rand(9999)}.gdf"
-    end
+class Graph_test < Test::Unit::TestCase
 
-    # == GDF::Graph.new == #
+    @@sample_graph = Graph.new(
+        [
+            {'label'=>'foo', 'id'=>2},
+            {'label'=>'bar', 'id'=>1},
+            {'label'=>'chuck', 'id'=>3}
+        ],
+        [
+            {'node1'=>'foo', 'node2'=>'bar'},
+            {'node1'=>'bar', 'node2'=>'foo'},
+            {'node1'=>'bar', 'node2'=>'chuck'},
+            {'node1'=>'foo', 'node2'=>'chuck'}
+        ]
+    )
 
     def test_new_empty_graph
-        g = GDF::Graph.new
+        g = Graph.new
 
         assert_equal([], g.nodes)
         assert_equal([], g.edges)
     end
 
-    # == GDF::Graph#== == #
+    # == Graph#== == #
 
     def test_equal_graphs
-        g1 = GDF::parse(@@sample_graph_1)
-        g2 = GDF::parse(@@sample_graph_1)
+        g1 = @@sample_graph
+        g2 = @@sample_graph.clone()
 
         assert_equal(true, g1==g2)
     end
 
-    # == GDF::Graph#write == #
-
-    def test_write_empty_graph
-
-        f = get_sample_filename
-
-        g = GDF::Graph.new
-        g.write(f)
-
-        assert_equal(true, File.exists?(f))
-        
-        content = File.read(f)
-
-        assert_equal('nodedef>', content)
-    end
-
-    def test_write_sample_graph
-
-        f = get_sample_filename
-
-        GDF::parse(@@sample_graph_1).write(f)
-
-        assert_equal(true, File.exists?(f))
-
-        content = File.read(f)
-
-        g0 = GDF::parse(@@sample_graph_1)
-        g1 = GDF::parse(content)
-
-        assert_equal(g0, g1)
-    end
-
-    # == GDF::Graph::NodeArray#set_default == #
+    # == Graph::NodeArray#set_default == #
 
     def test_nodearray_set_default_unexisting_property
-        g = GDF::Graph.new([{'name'=>'foo'}, {'name'=>'bar'}])
+        g = Graph.new([{'name'=>'foo'}, {'name'=>'bar'}])
         g.nodes.set_default 'age' => 21
 
         assert_equal(21, g.nodes[0]['age'])
@@ -76,7 +53,7 @@ class GDF_test < Test::Unit::TestCase
     end
 
     def test_nodearray_set_default_existing_property
-        g = GDF::Graph.new([{'name'=>'foo', 'age'=>42}, {'name'=>'bar'}])
+        g = Graph.new([{'name'=>'foo', 'age'=>42}, {'name'=>'bar'}])
         g.nodes.set_default 'age' => 21
 
         assert_equal(21, g.nodes[0]['age'])
@@ -84,7 +61,7 @@ class GDF_test < Test::Unit::TestCase
     end
 
     def test_nodearray_set_default_unexisting_property_before_push
-        g = GDF::Graph.new([{'name'=>'foo'}])
+        g = Graph.new([{'name'=>'foo'}])
         g.nodes.set_default 'city' => 'Paris'
         g.nodes.push({'name' => 'bar'})
 
@@ -93,7 +70,7 @@ class GDF_test < Test::Unit::TestCase
     end
 
     def test_nodearray_set_default_existing_property_before_push
-        g = GDF::Graph.new([{'name'=>'foo', 'city'=>'London'}])
+        g = Graph.new([{'name'=>'foo', 'city'=>'London'}])
         g.nodes.set_default 'city' => 'Paris'
         g.nodes.push({'name' => 'bar'})
 
@@ -101,17 +78,17 @@ class GDF_test < Test::Unit::TestCase
         assert_equal('Paris', g.nodes[0]['city'])
     end
 
-    # == GDF::Graph::edgeArray#set_default == #
+    # == Graph::edgeArray#set_default == #
 
     def test_edgearray_set_default_unexisting_property
-        g = GDF::Graph.new([],[{'node1'=>'foo', 'node2'=>'bar'}])
+        g = Graph.new([],[{'node1'=>'foo', 'node2'=>'bar'}])
         g.edges.set_default 'directed' => true
 
         assert_equal(true, g.edges[0]['directed'])
     end
 
     def test_edgearray_set_default_existing_property
-        g = GDF::Graph.new([],
+        g = Graph.new([],
                            [{'node1'=>'foo', 'node2'=>'bar', 'directed'=>true},
                             {'node1'=>'bar', 'node2'=>'foo'}])
         g.edges.set_default 'directed' => false
@@ -121,7 +98,7 @@ class GDF_test < Test::Unit::TestCase
     end
 
     def test_edgearray_set_default_unexisting_property_before_push
-        g = GDF::Graph.new([], [{'node1'=>'foo', 'node2'=>'bar'}])
+        g = Graph.new([], [{'node1'=>'foo', 'node2'=>'bar'}])
         g.edges.set_default 'directed' => true
         g.edges.push({'node1' => 'bar', 'node2'=>'foo'})
 
@@ -130,7 +107,7 @@ class GDF_test < Test::Unit::TestCase
     end
 
     def test_edgearray_set_default_existing_property_before_push
-        g = GDF::Graph.new([],
+        g = Graph.new([],
                            [{'node1'=>'foo', 'node2'=>'bar', 'directed'=>true}])
         g.edges.set_default 'node2' => 'foo'
         g.edges.push({'node1' => 'bar', 'node2' => 'foo'})
@@ -139,45 +116,45 @@ class GDF_test < Test::Unit::TestCase
         assert_equal('foo', g.edges[0]['node2'])
     end
 
-    # == GDF::Graph#& == #
+    # == Graph#& == #
 
     def test_empty_graph_AND_empty_graph
-        g1 = GDF::Graph.new
-        g2 = GDF::Graph.new
+        g1 = Graph.new
+        g2 = Graph.new
 
         assert_equal(g1, g1 & g2)
     end
 
     def test_one_node_graph_AND_empty_graph
-        g = GDF::Graph.new([{'label'=>'foo'}])
-        empty = GDF::Graph.new
+        g = Graph.new([{'label'=>'foo'}])
+        empty = Graph.new
 
         assert_equal(empty, g & empty)
     end
 
     def test_empty_graph_AND_one_node_graph
-        g = GDF::Graph.new([{'label'=>'foo'}])
-        empty = GDF::Graph.new
+        g = Graph.new([{'label'=>'foo'}])
+        empty = Graph.new
 
         assert_equal(empty, empty & g)
     end
 
     def test_sample_graph_AND_itself
-        g = GDF::parse(@@sample_graph_1)
+        g = @@sample_graph
 
         assert_equal(g, g & g)
     end
 
     def test_one_node_graph_AND_one_other_node_graph
-        g = GDF::Graph.new([{'label'=>'foo'}])
-        h = GDF::Graph.new([{'label'=>'bar'}])
-        empty = GDF::Graph.new
+        g = Graph.new([{'label'=>'foo'}])
+        h = Graph.new([{'label'=>'bar'}])
+        empty = Graph.new
 
         assert_equal(empty, g & h)
     end
 
     def test_sample_graph_AND_no_graph
-        g = GDF::parse(@@sample_graph_1)
+        g = @@sample_graph
 
         assert_equal(nil, g & 2)
         assert_equal(nil, g & true)
@@ -186,6 +163,16 @@ class GDF_test < Test::Unit::TestCase
         assert_equal(nil, g & {'foo'=>'bar'})
         assert_equal(nil, g & 'foo')
     end
+
+end
+
+class GDF_test < Test::Unit::TestCase
+
+    @@sample_graph_1  = "nodedef>label VARCHAR, num INT, biglabel VARCHAR\n"
+    @@sample_graph_1 += "toto, 14, TOTO\nlala, 5, LALA\ntiti, 988, TITI\n"
+    @@sample_graph_1 += "edgedef>node1 VARCHAR, node2 VARCHAR, directed BOOLEAN\n"
+    @@sample_graph_1 += "toto, lala, true\nlala, titi, true\n"
+    @@sample_graph_1 += "titi, lala, false\ntiti, toto, true\n"
 
     # == GDF::parse == #
 
@@ -353,5 +340,4 @@ class GDF_test < Test::Unit::TestCase
         assert_equal("nodedef>n INT\n9999999999999999\nedgedef>", gdf)
 
     end
-
 end
