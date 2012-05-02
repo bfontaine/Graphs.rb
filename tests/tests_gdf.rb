@@ -2,21 +2,42 @@
 
 require '../src/graph'
 require '../src/gdf'
-require '../src/gexf'
 require 'test/unit'
 
-def get_sample_filename
-    "/tmp/test_graph_#{rand(9999)}.gdf"
+module Utils
+    def self.get_sample_graph
+        @@sample_graph_1
+    end
+
+    @@sample_graph_1  = "nodedef>label VARCHAR,num INT,biglabel VARCHAR\n"
+    @@sample_graph_1 += "toto,14,TOTO\nlala,5,LALA\ntiti,988,TITI\n"
+    @@sample_graph_1 += "edgedef>node1 VARCHAR,node2 VARCHAR,directed BOOLEAN\n"
+    @@sample_graph_1 += "toto,lala,true\nlala,titi,true\n"
+    @@sample_graph_1 += "titi,lala,false\ntiti,toto,true\n"
 end
 
+class GDF_Graph_test < Test::Unit::TestCase
+
+    # == Graph#to_gdf == #
+
+    def test_empty_graph_to_gdf
+        g = Graph.new
+        empty_gdf = "nodedef>"
+
+        assert_equal(empty_gdf, g.to_gdf)
+    end
+
+    def test_sample_graph_to_gdf
+        gdf = Utils::get_sample_graph
+        g = GDF::parse(gdf)
+        assert_equal(gdf, g.to_gdf)
+    end
+
+    # == Graph#write('….gdf') == #
+
+end
 
 class GDF_test < Test::Unit::TestCase
-
-    @@sample_graph_1  = "nodedef>label VARCHAR, num INT, biglabel VARCHAR\n"
-    @@sample_graph_1 += "toto, 14, TOTO\nlala, 5, LALA\ntiti, 988, TITI\n"
-    @@sample_graph_1 += "edgedef>node1 VARCHAR, node2 VARCHAR, directed BOOLEAN\n"
-    @@sample_graph_1 += "toto, lala, true\nlala, titi, true\n"
-    @@sample_graph_1 += "titi, lala, false\ntiti, toto, true\n"
 
     # == GDF::parse == #
 
@@ -145,7 +166,7 @@ class GDF_test < Test::Unit::TestCase
     end
 
     def test_parse_sample_graph
-        g = GDF::parse(@@sample_graph_1)
+        g = GDF::parse(Utils::get_sample_graph)
 
         assert_equal(3, g.nodes.length)
         assert_equal(4, g.edges.length)
@@ -171,7 +192,7 @@ class GDF_test < Test::Unit::TestCase
     end
 
     def test_unparse_sample_graph
-        g1 = GDF::parse(@@sample_graph_1)
+        g1 = GDF::parse(Utils::get_sample_graph)
         g2 = GDF::parse(GDF::unparse(g1))
 
         assert_equal(g1, g2)

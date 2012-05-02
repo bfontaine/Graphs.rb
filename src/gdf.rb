@@ -3,6 +3,12 @@
 
 require_relative './graph'
 
+class Graph
+    def to_gdf(opts=nil)
+        GDF::unparse(self, opts)
+    end
+end
+
 module GDF
 
     def self.load(filename)
