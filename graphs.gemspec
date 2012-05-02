@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
     s.author        = 'Baptiste Fontaine'
     s.email         = 'batifon@yahoo.fr'
-    s.homepage      = 'https://github.com/bfontaine/Graph.rb'
+    s.homepage      = 'https://github.com/bfontaine/Graphs.rb'
 
     s.files         = ['lib/graph.rb', 'lib/graphs/gdf.rb']
     s.test_files    = Dir.glob('tests/tests_*.rb')
