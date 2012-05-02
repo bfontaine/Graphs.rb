@@ -1,0 +1,4 @@
+- move GDF::Graph to a new Graph module (graph.rb), and use it in gdf.rb instead
+  of GDF::Graph
+- Add Graph#|(*others) and replace Graph#&(other) with Graph#&(*others)
+- Implement #parse and #unparse in GEXF module
