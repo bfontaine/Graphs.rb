@@ -1,6 +1,8 @@
 #! /usr/bin/ruby1.9.1
 # -*- coding: UTF-8 -*-
 
+require 'yaml'
+
 class Graph
 
     class NodeArray < Array
@@ -51,5 +53,30 @@ class Graph
         edges = @edges & other.edges
 
         Graph.new(nodes, edges)
+    end
+
+    def write(filename, opts=nil)
+
+        has_ext = filename.split('.')
+
+        if ((has_ext.length == 1) || (has_ext[-1] == 'yml'))
+            # YAML (default)
+            nodes = self.nodes.to_a
+            edges = self.edges.to_a
+
+            data = {'nodes'=>nodes, 'edges'=>edges}.to_yaml
+            f = open(filename+'.yml', 'w')
+            f.write(data)
+            f.close
+        else
+            ext = has_ext[-1]
+
+            m = (self.methods - Object.methods).map {|e| e.to_s}
+
+            if (m.include? '_write_'+ext.downcase)
+                self.send('_write_'+ext.downcase, filename, opts)
+            end
+        end
+
     end
 end

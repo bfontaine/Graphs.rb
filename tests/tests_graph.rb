@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 require 'test/unit'
+require 'yaml'
 require_relative '../src/graph'
 
 class Graph_test < Test::Unit::TestCase
@@ -156,5 +157,18 @@ class Graph_test < Test::Unit::TestCase
         assert_equal(nil, g & ['foo', 'bar'])
         assert_equal(nil, g & {'foo'=>'bar'})
         assert_equal(nil, g & 'foo')
+    end
+
+    # == Graph#write == #
+
+    def test_graph_write_no_ext
+        g = @@sample_graph
+        f = '/tmp/_graph_test'
+        g.write(f)
+        assert_equal(true, File.exists?(f))
+        
+        dict = YAML.load(File.open(f))
+        assert_equal(g.nodes, dict['nodes'])
+        assert_equal(g.edges, dict['edges'])
     end
 end

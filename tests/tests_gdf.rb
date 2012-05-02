@@ -35,6 +35,18 @@ class GDF_Graph_test < Test::Unit::TestCase
 
     # == Graph#write('….gdf') == #
 
+    def test_empty_graph_write_gdf
+        g = Graph.new
+        g.write('/tmp/_graph_test.gdf')
+        g2 = GDF.load('/tmp/_graph_test.gdf')
+        assert_equal(g, g2)
+    end
+
+    def setup
+        if File.exists? '/tmp/_graph_test.gdf'
+            File.delete '/tmp/_graph_test.gdf'
+        end
+    end
 end
 
 class GDF_test < Test::Unit::TestCase
