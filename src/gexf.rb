@@ -3,4 +3,8 @@
 
 require 'builder'
 
-#TODO
+module GEXF
+
+    #TODO
+
+end
