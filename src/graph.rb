@@ -36,20 +36,20 @@ class Graph
     end
 
     def ==(other)
-        if (!other.is_a?(GDF::Graph))
+        if (!other.is_a?(Graph))
             return false
         end
         (self.nodes === other.nodes) && (self.edges == other.edges)
     end
 
     def &(other)
-        if (!other.is_a?(GDF::Graph))
+        if (!other.is_a?(Graph))
             return nil
         end
 
         nodes = @nodes & other.nodes
         edges = @edges & other.edges
 
-        GDF::Graph.new(nodes, edges)
+        Graph.new(nodes, edges)
     end
 end
