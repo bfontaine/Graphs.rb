@@ -2,3 +2,8 @@
 - Implement #parse and #unparse in GEXF module
 - Move documentation in a wiki page
 - Add RDoc comments
+- Add 2 optional list argument to Graph#| and #& to list fields which
+  should be inspected to generate the result (one list for nodes, one
+  for edges). This is useful when the graphs have fields in commons
+  (like 'node1' and 'node2') but others differents, like timestamps or
+  stuff like that.
