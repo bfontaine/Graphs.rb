@@ -346,4 +346,12 @@ class GDF_test < Test::Unit::TestCase
         assert_equal(g1, g2)
     end
 
+    def test_unparse_big_int_gephi
+        g = GDF::Graph.new([{'n'=>9999999999999999}])
+        gdf = GDF::unparse(g, {:gephi=>true})
+
+        assert_equal("nodedef>n INT\n9999999999999999\nedgedef>", gdf)
+
+    end
+
 end

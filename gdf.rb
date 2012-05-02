@@ -146,7 +146,7 @@ module GDF
         GDF::Graph.new(nodes, edges)
     end
 
-    def self.unparse(graph)
+    def self.unparse(graph, opts=nil)
 
         # nodes
         gdf_s = 'nodedef>'
@@ -156,7 +156,7 @@ module GDF
         end
 
         keys = graph.nodes[0].keys
-        nodedef = keys.map { |k| [k, self.get_type(graph.nodes[0][k])] }
+        nodedef = keys.map { |k| [k, self.get_type(graph.nodes[0][k], opts)] }
 
         gdf_s += (nodedef.map {|nd| nd.join(' ')}).join(',') + "\n"
 
@@ -172,7 +172,7 @@ module GDF
         end
 
         keys = graph.edges[0].keys
-        edgedef = keys.map { |k| [k, self.get_type(graph.edges[0][k])] }
+        edgedef = keys.map { |k| [k, self.get_type(graph.edges[0][k], opts)] }
 
         gdf_s += (edgedef.map {|ed| ed.join(' ')}).join(',') + "\n"
 
@@ -186,11 +186,13 @@ module GDF
     private
 
     # read the value of a node|edge field, and return the value's type (String)
-    def self.get_type(v)
+    def self.get_type(v, opts=nil)
+        opts = opts || {}
+
         if v.is_a?(Fixnum)
             return 'INT'
         elsif v.is_a?(Bignum)
-            return 'BIGINT'
+            return opts[:gephi] ? 'INT' : 'BIGINT'
         elsif v.is_a?(TrueClass) || v.is_a?(FalseClass)
             return 'BOOLEAN'
         elsif v.is_a?(Float)
