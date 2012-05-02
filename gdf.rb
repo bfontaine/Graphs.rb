@@ -57,9 +57,9 @@ module GDF
             GDF::Graph.new(nodes, edges)
         end
 
-        def write(filename)
+        def write(filename, opts=nil)
             f = File.open(filename, 'w')
-            f.write(GDF::unparse(self))
+            f.write(GDF::unparse(self, opts))
             f.close
         end
     end
