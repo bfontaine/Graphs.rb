@@ -3,7 +3,7 @@
 
 require 'test/unit'
 require 'yaml'
-require_relative '../src/graph'
+require 'graph'
 
 class Graph_test < Test::Unit::TestCase
 

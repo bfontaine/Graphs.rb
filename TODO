@@ -1,3 +1,4 @@
 - Add Graph#|(*others) and replace Graph#&(other) with Graph#&(*others)
 - Implement #parse and #unparse in GEXF module
 - Move documentation in a wiki page
+- Add RDoc comments

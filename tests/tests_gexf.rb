@@ -2,4 +2,4 @@
 # -*- coding: UTF-8 -*-
 
 require 'test/unit'
-require '../src/gexf'
+# require 'graphs/gexf'
