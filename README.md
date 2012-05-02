@@ -102,10 +102,12 @@ make sure that `INT` is used for all `BIGINT` fields.
 GEXF Module
 ===========
 
-**soon…**
+*soon…*
 
-Full Documentation
-==================
+Short Documentation
+===================
+
+(more documentation coming soon…)
 
 - `Graph`: a graph object, with `nodes` and `edges` attributes
 - `Graph.new(nodes[, edges])`: create a new `Graph` object
@@ -118,4 +120,3 @@ Full Documentation
 - `Graph::EdgeArray#set_default({ k=>v[,…] })`: set some defaults values
   for each edge of the current graph object.
 - `GDF::load(filename)`: parse the content of a GDF file, and return a new graph object
-
