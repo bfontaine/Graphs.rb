@@ -1,6 +1,33 @@
 The goal of this project is to provide some useful Ruby functions to manipulate
 graph files.
 
+Install
+-------
+
+The best way is to use the `graphs` gem:
+
+    gem install graphs
+
+Graph Class
+===========
+
+The `Graph` class is a simple graph with nodes and edges.
+
+Example
+-------
+
+    irb> require 'graph'
+    => true
+    irb> nodes = [{'name'=>'me'}, {'name'=>'you'}]
+    => [{'name'=>'me'}, {'name'=>'you'}]
+    irb> edges = [{'node1'=>'you', 'node2'=>'me', 'directed'=>true},
+                  {'node1'=>'you', 'node2'=>'me', 'directed'=>true}]
+    => [{'node1'=>'you', 'node2'=>'me', 'directed'=>true}, {'node1'=>'you', 'node2'=>'me', 'directed'=>true}] 
+    irb> g = Graph.new(nodes, edges)
+    => #<Graph:0x9e08e3c @nodes=[{"name"=>"me"}, {"name"=>"you"}], @edges=[{"node1"=>"you", "node2"=>"me", "directed"=>true}, {"node1"=>"you", "node2"=>"me", "directed"=>true}]>
+
+You can use the `&` method to make the intersection of two graphes.
+
 GDF Module
 ==========
 
@@ -26,7 +53,7 @@ Imagine we have a file as below:
 Then, using `irb`, we use the `GDF` module:
 
      $ irb
-     irb> require './gdf'
+     irb> require 'graphs/gdf'
      => true
      irb> g = GDF::load 'trips.gdf'
 
