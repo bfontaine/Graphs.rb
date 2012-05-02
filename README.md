@@ -63,6 +63,15 @@ then, we can save our new graph in a new file
 
     irb> g.write('new_trips.gdf')
 
+Note to [Gephi](https://github.com/gephi/gephi) users: You can add the `:gephi`
+option to `g.write(…)` if you have big numbers. `GDF::Graph#write` method use
+`BIGINT` type for big numbers, but Gephi does not support it and parses it as a
+string field. So using the following:
+    
+    irb> g.write('new_trips.gdf', {:gephi=>true})
+
+make sure that `INT` is used for all `BIGINT` fields.
+
 
 Documentation
 -------------
