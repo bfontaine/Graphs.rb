@@ -12,27 +12,73 @@ class Graph
     # graph to perform the intersection
     # @see Graph#&
     def Graph::intersection(*graphs)
+        return nil if graphs.length == 0
+
         opts = {}
 
-        _graphs = []
+        if graphs[-1].is_a?(Hash)
+            return nil if graphs.length == 1
+            opts.update(graphs.pop)
+        end
 
         graphs.each {|g|
-            if (g.is_a?(Graph))
-                _graphs << g
-            elsif (g.is_a?(Hash))
-                opts.update(g)
+            if (!g.is_a?(Graph))
+                return nil
             end
         }
 
-        return nil if (_graphs.length == 0)
-
         if opts[:same_fields]
-            _graphs.map! {|g| g.clone}
-        end
+            graphs.map! {|g| g.clone}
 
-        
+            # every first node of every graphs
+            nodes_ref = graphs.map {|g| g.nodes[0] || {}}
+            # every first edge of every graphs
+            edges_ref = graphs.map {|g| g.edges[0] || {}}
 
-        return Graph.new
+            nodes_keys_ref = nodes_ref.map {|n| n.keys}
+            edges_keys_ref = edges_ref.map {|e| e.keys}
+
+            # keep only same keys
+            nodes_keys_uniq = nodes_keys_ref.inject {|i,e| i &= e}
+            edges_keys_uniq = edges_keys_ref.inject {|i,e| i &= e}
+
+            graphs.map! {|g|
+                g.nodes.map! { |n|
+                    
+                    newnode = {}
+
+                    n.each_key { |k|
+                        newnode[k] = n[k] if nodes_keys_uniq.include?(k)
+                    }
+
+                    newnode
+                }
+                g.edges.map! { |n|
+                    
+                    newedge = {}
+
+                    n.each_key { |k|
+                        newedge[k] = n[k] if edges_keys_uniq.include?(k)
+                    }
+
+                    newedge
+                }
+                g
+            }
+
+            # TODO
+
+        elsif graphs.length == 2
+            return graphs[0] & graphs[1]
+        end 
+
+        graph = graphs.shift.clone
+
+        graphs.each { |g|
+            graph &= g
+        }
+
+        return graph
     end
 
     # An array of nodes, each node is an hash of label/value paires

@@ -86,14 +86,13 @@ class Graph_test < Test::Unit::TestCase
         assert_equal(empty, Graph::intersection(g, h))
     end
 
-    def test_intersection_sample_graph_AND_no_graph
+    def test_intersection_sample_graph_and_no_graph
         g = @@sample_graph
 
         assert_equal(nil, Graph::intersection(g, 2))
         assert_equal(nil, Graph::intersection(g, true))
         assert_equal(nil, Graph::intersection(g, false))
         assert_equal(nil, Graph::intersection(g, ['foo', 'bar']))
-        assert_equal(nil, Graph::intersection(g, {'foo'=>'bar'}))
         assert_equal(nil, Graph::intersection(g, 'foo'))
     end
 
