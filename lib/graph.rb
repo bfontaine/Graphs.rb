@@ -12,7 +12,26 @@ class Graph
     # graph to perform the intersection
     # @see Graph#&
     def Graph::intersection(*graphs)
-        #TODO
+        opts = {}
+
+        _graphs = []
+
+        graphs.each {|g|
+            if (g.is_a?(Graph))
+                _graphs << g
+            elsif (g.is_a?(Hash))
+                opts.update(g)
+            end
+        }
+
+        return nil if (_graphs.length == 0)
+
+        if opts[:same_fields]
+            _graphs.map! {|g| g.clone}
+        end
+
+        
+
         return Graph.new
     end
 
@@ -79,6 +98,18 @@ class Graph
         edges = @edges & other.edges
 
         Graph.new(nodes, edges)
+    end
+
+    # Clone the current graph. All nodes and edges are also cloned.
+    def clone()
+        g = Graph.new
+        g.nodes = self.nodes.clone
+        g.edges = self.edges.clone
+
+        g.nodes.map! {|h| h.clone}
+        g.edges.map! {|h| h.clone}
+
+        g
     end
 
     # Write the current Graph into a file.

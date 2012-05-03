@@ -36,36 +36,46 @@ class Graph_test < Test::Unit::TestCase
 
     # == Graph::intersection == #
 
+    def test_intersection_no_graphs
+        assert_equal(nil, Graph::intersection)
+        assert_equal(nil, Graph::intersection({:same_fields => true}))
+    end
+
     def test_intersection_2_empty_graphs
         g = Graph.new
+        h = g.clone
 
-        assert_equal(g, Graph::intersection(g, g))
+        assert_equal(h, Graph::intersection(g, g))
     end
 
     def test_intersection_4_empty_graphs_intersection
         g = Graph.new
+        h = g.clone
 
-        assert_equal(g, Graph::intersection(g, g, g, g))
+        assert_equal(h, Graph::intersection(g, g, g, g))
     end
 
     def test_intersection_one_node_graph_and_empty_graph
         g = Graph.new([{'label'=>'foo'}])
         empty = Graph.new
+        empty2 = empty.clone
 
-        assert_equal(empty, Graph::intersection(g, empty))
+        assert_equal(empty2, Graph::intersection(g, empty))
     end
 
     def test_intersection_sample_graph_and_itself_5_times
         g = @@sample_graph
+        h = g.clone
 
-        assert_equal(g, Graph::intersection(g, g, g, g, g))
+        assert_equal(h, Graph::intersection(g, g, g, g, g))
     end
 
     def test_intersection_sample_graph_and_itself_5_times_and_empty_graph
         g = @@sample_graph
         empty = Graph.new
+        empty2 = empty.clone
 
-        assert_equal(empty, Graph::intersection(g, g, empty, g, g, g))
+        assert_equal(empty2, Graph::intersection(g, g, empty, g, g, g))
     end
 
     def test_intersection_one_node_graph_and_one_other_node_graph
@@ -88,16 +98,19 @@ class Graph_test < Test::Unit::TestCase
     end
 
     def test_intersection_2_graphs_same_nodes_different_fields
-        g1 = @@sample_graph
-        g2 = @@sample_graph_1
+        g1 = @@sample_graph.clone
+        g2 = @@sample_graph_1.clone
         empty = Graph.new
 
         assert_equal(empty, Graph::intersection(g1, g2))
+        # test for side effects
+        assert_equal(@@sample_graph, g1)
+        assert_equal(@@sample_graph_1, g2)
     end
 
     def test_intersection_2_graphs_same_nodes_different_fields_same_fields_option
-        g1 = @@sample_graph
-        g2 = @@sample_graph_1
+        g1 = @@sample_graph.clone
+        g2 = @@sample_graph_1.clone
         
         intersec = Graph.new(
             [
@@ -113,6 +126,9 @@ class Graph_test < Test::Unit::TestCase
         )
 
         assert_equal(intersec, Graph::intersection(g1, g2, :same_fields => true))
+        # test for side effects
+        assert_equal(@@sample_graph, g1)
+        assert_equal(@@sample_graph_1, g2)
     end
 
 
@@ -123,6 +139,20 @@ class Graph_test < Test::Unit::TestCase
 
         assert_equal([], g.nodes)
         assert_equal([], g.edges)
+    end
+
+    # == Graph#clone == #
+
+    def test_empty_graph_clone
+        g = Graph.new
+        h = g.clone
+
+        assert_equal(g, h)
+
+        h.nodes.push({})
+
+        assert_equal(0, g.nodes.length)
+        assert_not_equal(g, h)
     end
 
     # == Graph#== == #
