@@ -66,8 +66,6 @@ class Graph
                 g
             }
 
-            # TODO
-
         elsif graphs.length == 2
             return graphs[0] & graphs[1]
         end 
