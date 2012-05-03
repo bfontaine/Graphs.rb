@@ -2,8 +2,10 @@
 
 require 'yaml'
 
+# A graph with nodes and edges
 class Graph
 
+    # An array of nodes, each node is an hash of label/value paires
     class NodeArray < Array
 
         def initialize(*args)
@@ -11,6 +13,10 @@ class Graph
             @defaults = {}
         end
 
+        # Set some default values for current elements.
+        # @note This method can be called multiple times.
+        # @example Set all nodes's 'created-at' value to '2012-05-03'
+        #   myNodeList.set_default({'created-at'=>'2012-05-03'})
         def set_default(dict)
             @defaults.update(dict)
             self.map! { |e| e.update(@defaults) }
@@ -22,20 +28,26 @@ class Graph
             end
             o2 = o.clone
             o2.update(@defaults)
-            super
+            super(o2)
         end
     end
 
+    # An array of edges, each edge is an hash of label/value paires
     class EdgeArray < NodeArray
     end
 
     attr_accessor :nodes, :edges
 
+    # @param nodes [Array] Nodes of the graph
+    # @param edges [Array] Edges of the graph
     def initialize(nodes=nil, edges=nil)
         @nodes = NodeArray.new(nodes || [])
         @edges = EdgeArray.new(edges || [])
     end
 
+    # Test if current graph has same nodes and edges as the other
+    # graph.
+    # @param other [Graph]
     def ==(other)
         if (!other.is_a?(Graph))
             return false
@@ -43,6 +55,10 @@ class Graph
         (self.nodes === other.nodes) && (self.edges == other.edges)
     end
 
+    # Perform an intersection between the current graph and the other.
+    # Returns a new Graph which nodes are both in the current graph and
+    # the other (idem for edges).
+    # @param other [Graph]
     def &(other)
         if (!other.is_a?(Graph))
             return nil
@@ -54,6 +70,10 @@ class Graph
         Graph.new(nodes, edges)
     end
 
+    # Write the current Graph into a file.
+    # @param filename [String] A valid filename
+    # @param opts [Hash] A customizable set of options
+    # @option opts [Boolean] :gephi Should be <tt>true</tt> if the file will be used with Gephi.
     def write(filename, opts=nil)
 
         has_ext = filename.split('.')
