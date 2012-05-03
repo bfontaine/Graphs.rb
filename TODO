@@ -1,3 +1,4 @@
 - Add Graph#|(other) and Graph::union(*graphs)
 - Implement #parse and #unparse in GEXF module
 - Move documentation in a wiki page
+- Use YARD comments: http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
