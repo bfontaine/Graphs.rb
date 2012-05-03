@@ -3,10 +3,17 @@
 require_relative '../graph'
 
 class Graph
+    # Returns a GDF version of the current graph
+    # @param opts [Hash] A customizable set of options
+    # @see GDF::unparse
     def to_gdf(opts=nil)
         GDF::unparse(self, opts)
     end
 
+    # Write the current graph into a GDF file. This method is used internally,
+    # use Graph#write instead.
+    # @param filename [String] a valid filename
+    # @see GDF::unparse
     def write_gdf(filename, opts=nil)
         gdf = GDF::unparse(self, opts)
         f = File.open(filename, 'w')
@@ -15,12 +22,20 @@ class Graph
     end
 end
 
+# GDF-related functions
 module GDF
 
+    # Loads a GDF file and return a new Graph object
+    # @param filename [String] a valid filename
+    # @see GDF::parse
     def self.load(filename)
         self.parse(File.read(filename))
     end
 
+    # Parse some GDF text and return a new Graph object
+    # @param content [String] a valid GDF String
+    # @see GDF::load
+    # @see GDF::unparse
     def self.parse(content)
 
         if (content.nil? || content.length == 0)
@@ -99,6 +114,10 @@ module GDF
         Graph.new(nodes, edges)
     end
 
+    # Return a GDF String which describe the given Graph
+    # @param graph [Graph]
+    # @param opts [Hash] A customizable set of options
+    # @see Graph#write
     def self.unparse(graph, opts=nil)
 
         # nodes
@@ -138,7 +157,8 @@ module GDF
 
     private
 
-    # read the value of a node|edge field, and return the value's type (String)
+    # Read the value of a node/edge field, and return the value's
+    # type (String)
     def self.get_type(v, opts=nil)
         opts = opts || {}
 
@@ -155,7 +175,8 @@ module GDF
         end
     end
 
-    # read a (node|edge)def, and return ['label', 'type of value']
+    # read a node/edge def, and return a list which first element is the
+    # label of the field, and the second is its type
     def self.read_def(s)
         *label, value_type = s.split /\s+/
             if /((tiny|small|medium|big)?int|integer)/i.match(value_type)
