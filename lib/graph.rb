@@ -7,6 +7,9 @@ class Graph
 
     # Return a new Graph which is the intersection of every given graphs.
     # Each node of the intersection is in every given graph (idem for edges).
+    # The last argument may be a hash of options.
+    # @option options [Boolean] :same_fields use only fields which are in every
+    # graph to perform the intersection
     # @see Graph#&
     def Graph::intersection(*graphs)
         #TODO
