@@ -34,6 +34,90 @@ class Graph_test < Test::Unit::TestCase
         ]
     )
 
+    # == Graph::intersection == #
+
+    def test_intersection_2_empty_graphs
+        g = Graph.new
+
+        assert_equal(g, Graph::intersection(g, g))
+    end
+
+    def test_intersection_4_empty_graphs_intersection
+        g = Graph.new
+
+        assert_equal(g, Graph::intersection(g, g, g, g))
+    end
+
+    def test_intersection_one_node_graph_and_empty_graph
+        g = Graph.new([{'label'=>'foo'}])
+        empty = Graph.new
+
+        assert_equal(empty, Graph::intersection(g, empty))
+    end
+
+    def test_intersection_sample_graph_and_itself_5_times
+        g = @@sample_graph
+
+        assert_equal(g, Graph::intersection(g, g, g, g, g))
+    end
+
+    def test_intersection_sample_graph_and_itself_5_times_and_empty_graph
+        g = @@sample_graph
+        empty = Graph.new
+
+        assert_equal(empty, Graph::intersection(g, g, empty, g, g, g))
+    end
+
+    def test_intersection_one_node_graph_and_one_other_node_graph
+        g = Graph.new([{'label'=>'foo'}])
+        h = Graph.new([{'label'=>'bar'}])
+        empty = Graph.new
+
+        assert_equal(empty, Graph::intersection(g, h))
+    end
+
+    def test_intersection_sample_graph_AND_no_graph
+        g = @@sample_graph
+
+        assert_equal(nil, Graph::intersection(g, 2))
+        assert_equal(nil, Graph::intersection(g, true))
+        assert_equal(nil, Graph::intersection(g, false))
+        assert_equal(nil, Graph::intersection(g, ['foo', 'bar']))
+        assert_equal(nil, Graph::intersection(g, {'foo'=>'bar'}))
+        assert_equal(nil, Graph::intersection(g, 'foo'))
+    end
+
+    def test_intersection_2_graphs_same_nodes_different_fields
+        g1 = @@sample_graph
+        g2 = @@sample_graph_1
+        empty = Graph.new
+
+        assert_equal(empty, Graph::intersection(g1, g2))
+    end
+
+    def test_intersection_2_graphs_same_nodes_different_fields_same_fields_option
+        g1 = @@sample_graph
+        g2 = @@sample_graph_1
+        
+        intersec = Graph.new(
+            [
+                {'label'=>'foo'},
+                {'label'=>'bar'},
+                {'label'=>'chuck'}
+            ],
+            [
+                {'node1'=>'foo', 'node2'=>'bar'},
+                {'node1'=>'bar', 'node2'=>'foo'},
+                {'node1'=>'foo', 'node2'=>'chuck'}
+            ]
+        )
+
+        assert_equal(intersec, Graph::intersection(g1, g2, :same_fields => true))
+    end
+
+
+    # == Graph#new == #
+
     def test_new_empty_graph
         g = Graph.new
 

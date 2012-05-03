@@ -5,6 +5,14 @@ require 'yaml'
 # A graph with nodes and edges
 class Graph
 
+    # Return a new Graph which is the intersection of every given graphs.
+    # Each node of the intersection is in every given graph (idem for edges).
+    # @see Graph#&
+    def Graph::intersection(*graphs)
+        #TODO
+        return Graph.new
+    end
+
     # An array of nodes, each node is an hash of label/value paires
     class NodeArray < Array
 
