@@ -21,6 +21,19 @@ class Graph_test < Test::Unit::TestCase
         ]
     )
 
+    @@sample_graph_1 = Graph.new(
+        [
+            {'label'=>'bar', 'num'=>3},
+            {'label'=>'foo', 'num'=>42},
+            {'label'=>'chuck', 'num'=>78}
+        ],
+        [
+            {'node1'=>'foo', 'node2'=>'bar', 'time'=>1.0},
+            {'node1'=>'bar', 'node2'=>'foo', 'time'=>2.5},
+            {'node1'=>'foo', 'node2'=>'chuck', 'time'=>3.1}
+        ]
+    )
+
     def test_new_empty_graph
         g = Graph.new
 
@@ -102,8 +115,7 @@ class Graph_test < Test::Unit::TestCase
     end
 
     def test_edgearray_set_default_existing_property_before_push
-        g = Graph.new([],
-                           [{'node1'=>'foo', 'node2'=>'bar', 'directed'=>true}])
+        g = Graph.new([], [{'node1'=>'foo', 'node2'=>'bar', 'directed'=>true}])
         g.edges.set_default 'node2' => 'foo'
         g.edges.push({'node1' => 'bar', 'node2' => 'foo'})
 
@@ -159,6 +171,14 @@ class Graph_test < Test::Unit::TestCase
         assert_equal(nil, g & 'foo')
     end
 
+    def test_AND_2_graphs_same_nodes_different_labels
+        g1 = @@sample_graph
+        g2 = @@sample_graph_1
+        empty = Graph.new
+
+        assert_equal(empty, g1 & g2)
+    end
+
     # == Graph#write == #
 
     def test_graph_write_no_ext
@@ -170,5 +190,14 @@ class Graph_test < Test::Unit::TestCase
         dict = YAML.load(File.open(f))
         assert_equal(g.nodes, dict['nodes'])
         assert_equal(g.edges, dict['edges'])
+    end
+
+    def test_graph_write_unknow_ext
+        g = @@sample_graph
+        f = '/tmp/_graph_test.foo'
+        assert_raise(NoMethodError) do
+            g.write(f)
+        end
+        assert_equal(false, File.exists?(f))
     end
 end

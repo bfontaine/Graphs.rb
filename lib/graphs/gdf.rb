@@ -7,7 +7,7 @@ class Graph
         GDF::unparse(self, opts)
     end
 
-    def _write_gdf(filename, opts=nil)
+    def write_gdf(filename, opts=nil)
         gdf = GDF::unparse(self, opts)
         f = File.open(filename, 'w')
         f.write(gdf)
