@@ -251,7 +251,7 @@ class Graph_test < Test::Unit::TestCase
 
     # == Graph#& == #
 
-    def test_empty_graph_AND_empty_graph
+    def test_AND_2_empty_graphs
         g1 = Graph.new
         g2 = Graph.new
 
@@ -303,6 +303,63 @@ class Graph_test < Test::Unit::TestCase
         empty = Graph.new
 
         assert_equal(empty, g1 & g2)
+    end
+
+    # == Graph#^ == #
+
+    def test_XOR_2_empty_graphs
+        g = Graph.new
+        assert_equal(g, g ^ g)
+    end
+
+    def test_one_node_graph_XOR_empty_graph
+        g = Graph.new([{'label'=>'foo'}])
+        empty = Graph.new
+
+        assert_equal(g, g ^ empty)
+    end
+
+    def test_empty_graph_XOR_one_node_graph
+        g = Graph.new([{'label'=>'foo'}])
+        empty = Graph.new
+
+        assert_equal(g, empty ^ g)
+    end
+
+    def test_sample_graph_XOR_itself
+        g = @@sample_graph
+        empty = Graph.new
+
+        assert_equal(empty, g ^ g)
+    end
+
+    def test_one_node_graph_XOR_one_other_node_graph
+        g1 = Graph.new([{'label'=>'foo'}])
+        g2 = Graph.new([{'label'=>'bar'}])
+        g3 = Graph.new(g1.nodes+g2.nodes)
+        g4 = Graph.new(g2.nodes+g1.nodes)
+
+        assert_equal(g3, g1 ^ g2)
+        assert_equal(g4, g2 ^ g1)
+    end
+
+    def test_sample_graph_XOR_no_graph
+        g = @@sample_graph
+
+        assert_equal(nil, g ^ 2)
+        assert_equal(nil, g ^ true)
+        assert_equal(nil, g ^ false)
+        assert_equal(nil, g ^ ['foo', 'bar'])
+        assert_equal(nil, g ^ {'foo'=>'bar'})
+        assert_equal(nil, g ^ 'foo')
+    end
+
+    def test_XOR_2_graphs_same_nodes_different_labels
+        g1 = @@sample_graph
+        g2 = @@sample_graph_1
+        g3 = Graph.new(g1.nodes+g2.nodes, g1.edges+g2.edges)
+
+        assert_equal(g3, g1 ^ g2)
     end
 
     # == Graph#write == #

@@ -28,43 +28,7 @@ class Graph
         }
 
         if opts[:same_fields]
-            graphs.map! {|g| g.clone}
-
-            # every first node of every graphs
-            nodes_ref = graphs.map {|g| g.nodes[0] || {}}
-            # every first edge of every graphs
-            edges_ref = graphs.map {|g| g.edges[0] || {}}
-
-            nodes_keys_ref = nodes_ref.map {|n| n.keys}
-            edges_keys_ref = edges_ref.map {|e| e.keys}
-
-            # keep only same keys
-            nodes_keys_uniq = nodes_keys_ref.inject {|i,e| i &= e}
-            edges_keys_uniq = edges_keys_ref.inject {|i,e| i &= e}
-
-            graphs.map! {|g|
-                g.nodes.map! { |n|
-                    
-                    newnode = {}
-
-                    n.each_key { |k|
-                        newnode[k] = n[k] if nodes_keys_uniq.include?(k)
-                    }
-
-                    newnode
-                }
-                g.edges.map! { |n|
-                    
-                    newedge = {}
-
-                    n.each_key { |k|
-                        newedge[k] = n[k] if edges_keys_uniq.include?(k)
-                    }
-
-                    newedge
-                }
-                g
-            }
+            *graphs = keep_only_same_fields(*graphs)
 
         elsif graphs.length == 2
             return graphs[0] & graphs[1]
@@ -145,6 +109,10 @@ class Graph
         Graph.new(nodes, edges)
     end
 
+    def ^(other)
+        #TODO
+    end
+
     # Clone the current graph. All nodes and edges are also cloned.
     def clone()
         g = Graph.new
@@ -185,4 +153,49 @@ class Graph
         end
 
     end
+
+    # return the provided set of graphs, from which every node/edge label which
+    # is not in all graphs has been removed. So every returned graph has same
+    # node/edge labels than each other
+    def Graph::keep_only_same_fields(*graphs)
+            graphs.map! {|g| g.clone}
+
+            # every first node of every graphs
+            nodes_ref = graphs.map {|g| g.nodes[0] || {}}
+            # every first edge of every graphs
+            edges_ref = graphs.map {|g| g.edges[0] || {}}
+
+            nodes_keys_ref = nodes_ref.map {|n| n.keys}
+            edges_keys_ref = edges_ref.map {|e| e.keys}
+
+            # keep only same keys
+            nodes_keys_uniq = nodes_keys_ref.inject {|i,e| i &= e}
+            edges_keys_uniq = edges_keys_ref.inject {|i,e| i &= e}
+
+            graphs.map {|g|
+                g.nodes.map! { |n|
+                    
+                    newnode = {}
+
+                    n.each_key { |k|
+                        newnode[k] = n[k] if nodes_keys_uniq.include?(k)
+                    }
+
+                    newnode
+                }
+                g.edges.map! { |n|
+                    
+                    newedge = {}
+
+                    n.each_key { |k|
+                        newedge[k] = n[k] if edges_keys_uniq.include?(k)
+                    }
+
+                    newedge
+                }
+                g
+            }
+    end
+
+    private_class_method :keep_only_same_fields
 end
