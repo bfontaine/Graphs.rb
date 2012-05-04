@@ -1,7 +1,7 @@
 - Add Graph#|(other) and Graph::union(*graphs)
 - Add Graph#not(other) (returns a new graph with every nodes/edges which are in
   the current graph but not in `other`)
-- Add Graph::xor(*graphs)
+- Add Graph::xor(*graphs) and Graph#^(other)
 
 - Implement #parse and #unparse in GEXF module
 
