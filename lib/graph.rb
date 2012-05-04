@@ -110,13 +110,14 @@ class Graph
     class EdgeArray < NodeArray
     end
 
-    attr_accessor :nodes, :edges
+    attr_accessor :nodes, :edges, :attrs
 
     # @param nodes [Array] Nodes of the graph
     # @param edges [Array] Edges of the graph
     def initialize(nodes=nil, edges=nil)
         @nodes = NodeArray.new(nodes || [])
         @edges = EdgeArray.new(edges || [])
+        @attrs = {}
     end
 
     # Test if current graph has same nodes and edges as the other

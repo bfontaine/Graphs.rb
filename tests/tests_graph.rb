@@ -34,6 +34,19 @@ class Graph_test < Test::Unit::TestCase
         ]
     )
 
+    # == Graph#attrs == #
+
+    def test_graph_attrs
+        g = Graph.new
+        assert_equal({}, g.attrs)
+
+        g.attrs['mode'] = 'static'
+        g.attrs['defaultedgetype'] = 'directed'
+
+        assert_equal('static', g.attrs['mode'])
+        assert_equal('directed', g.attrs['defaultedgetype'])
+    end
+
     # == Graph::intersection == #
 
     def test_intersection_no_graphs
