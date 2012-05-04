@@ -98,6 +98,8 @@ class Graph
     # Returns a new Graph which nodes are both in the current graph and
     # the other (idem for edges).
     # @param other [Graph]
+    # @see Graph#^
+    # @see Graph::intersection
     def &(other)
         if (!other.is_a?(Graph))
             return nil
@@ -109,8 +111,20 @@ class Graph
         Graph.new(nodes, edges)
     end
 
+    # Perform a XOR operation between the current graph and the other. Returns a
+    # new Graph which nodes are in the current graph or in the other, but not in
+    # both (idem for edges).
+    # @param other [Graph]
+    # @see Graph#&
     def ^(other)
-        #TODO
+        if (!other.is_a?(Graph))
+            return nil
+        end
+
+        nodes = (@nodes + other.nodes) - (@nodes & other.nodes)
+        edges = (@edges + other.edges) - (@edges & other.edges)
+
+        Graph.new(nodes, edges)
     end
 
     # Clone the current graph. All nodes and edges are also cloned.
