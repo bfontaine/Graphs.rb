@@ -1,8 +1,8 @@
 - Add Graph#|(other) and Graph::union(*graphs)
-- Add Graph#-(other), which is like Graph#| but it keeps duplicate nodes and
+- Add Graph#+(other), which is like Graph#| but it keeps duplicate nodes and
   edges
 - Add Graph#not(other) (returns a new graph with every nodes/edges which are in
-  the current graph but not in `other`). Make an alias with Graph#+(other)
+  the current graph but not in `other`). Make an alias with Graph#-(other)
 - Add Graph::xor(*graphs)
 
 - Implement #parse and #unparse in GEXF module
