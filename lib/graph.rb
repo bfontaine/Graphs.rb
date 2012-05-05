@@ -138,6 +138,17 @@ class Graph
         Graph.new(nodes, edges)
     end
 
+    def -(other)
+        if (!other.is_a?(Graph))
+            return nil
+        end
+
+        nodes = @nodes - other.nodes
+        edges = @edges - other.edges
+
+        Graph.new(nodes, edges)
+    end
+
     # Clone the current graph. All nodes and edges are also cloned.
     def clone()
         g = Graph.new

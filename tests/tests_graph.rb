@@ -394,14 +394,14 @@ class Graph_test < Test::Unit::TestCase
     
     def test_empty_graph_minus_sample_graph
         g = @@sample_graph
-        empty = graph.new
+        empty = Graph.new
 
         assert_equal(empty, empty-g)
     end
     
     def test_sample_graph_minus_empty_graph
         g = @@sample_graph
-        empty = graph.new
+        empty = Graph.new
 
         assert_equal(g, g-empty)
     end
