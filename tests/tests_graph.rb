@@ -386,7 +386,7 @@ class Graph_test < Test::Unit::TestCase
 
     # == Graph#- == #
     
-    def test_empty_graph_mins_empty_graph
+    def test_empty_graph_minus_empty_graph
         empty = Graph.new
 
         assert_equal(empty, empty-empty)
@@ -411,6 +411,35 @@ class Graph_test < Test::Unit::TestCase
         empty = Graph.new
 
         assert_equal(empty, g-g)
+    end
+
+    # == Graph#not == #
+    
+    def test_empty_graph_NOT_empty_graph
+        empty = Graph.new
+
+        assert_equal(empty, empty.not(empty))
+    end
+    
+    def test_empty_graph_NOT_sample_graph
+        g = @@sample_graph
+        empty = Graph.new
+
+        assert_equal(empty, empty.not(g))
+    end
+    
+    def test_sample_graph_NOT_empty_graph
+        g = @@sample_graph
+        empty = Graph.new
+
+        assert_equal(g, g.not(empty))
+    end
+    
+    def test_sample_graph_NOT_itself
+        g = @@sample_graph
+        empty = Graph.new
+
+        assert_equal(empty, g.not(g))
     end
 
     # == Graph#write == #

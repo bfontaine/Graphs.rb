@@ -127,6 +127,8 @@ class Graph
         Graph.new(nodes, edges)
     end
 
+    # Add two graphs, keeping duplicate nodes and edges
+    # @param other [Graph]
     def +(other)
         if (!other.is_a?(Graph))
             return nil
@@ -138,6 +140,9 @@ class Graph
         Graph.new(nodes, edges)
     end
 
+    # Returns a new Graph, which is a copy of the current graph without nodes
+    # and edges which are in the given Graph.
+    # @param other [Graph]
     def -(other)
         if (!other.is_a?(Graph))
             return nil
@@ -147,6 +152,11 @@ class Graph
         edges = @edges - other.edges
 
         Graph.new(nodes, edges)
+    end
+
+    # @see Graph#-
+    def not(other)
+        self - other
     end
 
     # Clone the current graph. All nodes and edges are also cloned.
