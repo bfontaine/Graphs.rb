@@ -12,28 +12,11 @@ class Graph
     # graph to perform the intersection
     # @see Graph#&
     def Graph::intersection(*graphs)
-        return nil if graphs.length == 0
+         perform_graphs_group_op(*graphs, &:&)
+    end
 
-        # options
-        opts = {}
-
-        # if the last arg is an Hash, use it as a set of options and remove it
-        # from the arguments
-        if graphs[-1].is_a?(Hash)
-            return nil if graphs.length == 1
-            opts.update(graphs.pop)
-        end
-
-        # return nil if one argument is not a graph
-        graphs.each {|g|
-                return nil if (!g.is_a?(Graph))
-        }
-
-        # if :same_fields option is set, call `keep_only_same_fields` function
-        *graphs = keep_only_same_fields(*graphs) if opts[:same_fields]
-
-        # perform an AND operation on all graph list
-        graphs.inject(&:&)
+    def Graph::union(*graphs)
+        perform_graphs_group_op(*graphs, &:|)
     end
 
     # An array of nodes, each node is an hash of label/value paires
@@ -252,5 +235,32 @@ class Graph
             }
     end
 
-    private_class_method :keep_only_same_fields
+    # Perform an operation on a graphs group
+    # @param block [Block] operation
+    def Graph::perform_graphs_group_op(*graphs, &block)
+        return nil if graphs.length == 0
+
+        # options
+        opts = {}
+
+        # if the last arg is an hash, use it as a set of options and remove it
+        # from the arguments
+        if graphs[-1].is_a?(Hash)
+            return nil if graphs.length == 1
+            opts.update(graphs.pop)
+        end
+
+        # return nil if one argument is not a graph
+        graphs.each {|g|
+                return nil if (!g.is_a?(Graph))
+        }
+
+        # if :same_fields option is set, call `keep_only_same_fields` function
+        *graphs = keep_only_same_fields(*graphs) if opts[:same_fields]
+
+        # perform an and operation on all graph list
+        graphs.inject(&block)
+    end
+
+    private_class_method :keep_only_same_fields, :perform_graphs_group_op
 end

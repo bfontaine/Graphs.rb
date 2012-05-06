@@ -478,12 +478,12 @@ class Graph_test < Test::Unit::TestCase
 
     def test_union_one_empty_graph
         empty = Graph.new
-        assert(empty, Graph::union(empty))
+        assert_equal(empty, Graph::union(empty))
     end
 
     def test_union_3_empty_graph
         empty = Graph.new
-        assert(empty, Graph::union(empty, empty, empty))
+        assert_equal(empty, Graph::union(empty, empty, empty))
     end
     
     def test_union_empty_graph_and_sample_graph
