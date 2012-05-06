@@ -5,18 +5,39 @@ require 'yaml'
 # A graph with nodes and edges
 class Graph
 
-    # Return a new Graph which is the intersection of every given graphs.
+    # Return a new Graph which is the intersection of every given graph.
     # Each node of the intersection is in every given graph (idem for edges).
     # The last argument may be a hash of options.
     # @option options [Boolean] :same_fields use only fields which are in every
-    # graph to perform the intersection
+    # graph to compare nodes/edges to perform the intersection
     # @see Graph#&
+    # @see Graph::union
+    # @see Graph::xor
     def Graph::intersection(*graphs)
          perform_graphs_group_op(*graphs, &:&)
     end
 
+    # Return a new Graph which is the union of every given graph.
+    # Each node of the union is in one or more given graph(s) (idem for edges).
+    # The last argument may be a hash of options.
+    # @option options [Boolean] :same_fields use only fields which are in every
+    # graph to compare nodes/edges to perform the union
+    # @see Graph#|
+    # @see Graph::intersection
+    # @see Graph::xor
     def Graph::union(*graphs)
         perform_graphs_group_op(*graphs, &:|)
+    end
+
+    # Perform a XOR operation on all given graphs, and returns the result.
+    # The last argument may be a hash of options.
+    # @option options [Boolean] :same_fields use only fields which are in every
+    # graph to compare nodes/edges to perform the XOR operation
+    # @see Graph#^
+    # @see Graph::union
+    # @see Graph::intersection
+    def Graph::xor(*graphs)
+        perform_graphs_group_op(*graphs, &:^)
     end
 
     # An array of nodes, each node is an hash of label/value paires
