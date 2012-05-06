@@ -11,7 +11,10 @@ The best way is to use the `graphs` gem:
 Graph Class
 ===========
 
-The `Graph` class is a simple graph with nodes and edges.
+The `Graph` class is a simple graph with nodes and edges. It provides three
+read-write attributes: `nodes`, `edges`, and `attr` (attributes of the graph,
+like author or description). It can be written in a file using `Graph#write`
+method.
 
 Example
 -------
@@ -26,16 +29,16 @@ Example
     irb> g = Graph.new(nodes, edges)
     => #<Graph:0x9e08e3c @nodes=[{"name"=>"me"}, {"name"=>"you"}], @edges=[{"node1"=>"you", "node2"=>"me", "directed"=>true}, {"node1"=>"you", "node2"=>"me", "directed"=>true}]>
 
-You can use the `&` method to make the intersection of two graphes.
+You can perform some operations on graphes using the `|`, `&`, `^`, `+` or `-`
+operators. See the [documentation](http://rubydoc.info/gems/graphs/frames) for
+more informations.
 
 GDF Module
 ==========
 
 The GDF module is used to parse
 [GDF](http://guess.wikispot.org/The_GUESS_.gdf_format) files using the unique method
-`GDF::load(filename)`. It returns a `Graph` object which provide two
-read-write attributes: `nodes` and `edges`. It can also write graph objects in files
-using `Graph#write(filename)` method.
+`GDF::load(filename)` which returns a Graph object.
 
 Example
 -------
@@ -103,20 +106,3 @@ GEXF Module
 ===========
 
 *soon…*
-
-Short Documentation
-===================
-
-(more documentation coming soon…)
-
-- `Graph`: a graph object, with `nodes` and `edges` attributes
-- `Graph.new(nodes[, edges])`: create a new `Graph` object
-- `Graph#write(filename)`: write the current graph object into a file. The
-  filetype is based on `filename`'s extension (Yaml is used as default)
-- `Graph::NodeArray`: kind of `Array`, with a `set_default` method
-- `Graph::EdgeArray`: same as `Graph::NodeArray`
-- `Graph::NodeArray#set_default({ k=>v[,…] })`: set some defaults values
-  for each node of the current graph object.
-- `Graph::EdgeArray#set_default({ k=>v[,…] })`: set some defaults values
-  for each edge of the current graph object.
-- `GDF::load(filename)`: parse the content of a GDF file, and return a new graph object
