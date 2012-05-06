@@ -14,33 +14,26 @@ class Graph
     def Graph::intersection(*graphs)
         return nil if graphs.length == 0
 
+        # options
         opts = {}
 
+        # if the last arg is an Hash, use it as a set of options and remove it
+        # from the arguments
         if graphs[-1].is_a?(Hash)
             return nil if graphs.length == 1
             opts.update(graphs.pop)
         end
 
+        # return nil if one argument is not a graph
         graphs.each {|g|
-            if (!g.is_a?(Graph))
-                return nil
-            end
+                return nil if (!g.is_a?(Graph))
         }
 
-        if opts[:same_fields]
-            *graphs = keep_only_same_fields(*graphs)
+        # if :same_fields option is set, call `keep_only_same_fields` function
+        *graphs = keep_only_same_fields(*graphs) if opts[:same_fields]
 
-        elsif graphs.length == 2
-            return graphs[0] & graphs[1]
-        end 
-
-        graph = graphs.shift.clone
-
-        graphs.each { |g|
-            graph &= g
-        }
-
-        return graph
+        # perform an AND operation on all graph list
+        graphs.inject(&:&)
     end
 
     # An array of nodes, each node is an hash of label/value paires
