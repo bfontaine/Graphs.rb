@@ -3,6 +3,12 @@
 require 'yaml'
 
 # A graph with nodes and edges
+# @!attribute [rw] nodes
+#   @return [NodeArray] array of current Graph's nodes
+# @!attribute [rw] edges
+#   @return [EdgeArray] array of current Graph's edges
+# @!attribute [rw] attrs
+#   @return [Hash] attributes of the current Graph (e.g. author, description, …)
 class Graph
 
     # Return a new Graph which is the intersection of every given graph.
@@ -172,7 +178,8 @@ class Graph
         self - other
     end
 
-    # Clone the current graph. All nodes and edges are also cloned.
+    # Clone the current graph. All nodes and edges are also cloned. A new Graph
+    # is returned.
     def clone()
         g = Graph.new
         g.nodes = self.nodes.clone
