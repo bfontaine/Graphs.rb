@@ -140,6 +140,20 @@ class Graph
         Graph.new(nodes, edges)
     end
 
+    # Perform an OR operation on the current Graph and the given one. Returns a
+    # new graph which every node is in the current Graph and/or the other
+    # (idem for edges).
+    def |(other)
+        if (!other.is_a?(Graph))
+            return nil
+        end
+            
+        nodes = @nodes | other.nodes
+        edges = @edges | other.edges
+
+        Graph.new(nodes, edges)
+    end
+
     # Returns a new Graph, which is a copy of the current graph without nodes
     # and edges which are in the given Graph.
     # @param other [Graph]

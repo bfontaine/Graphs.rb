@@ -384,6 +384,38 @@ class Graph_test < Test::Unit::TestCase
         assert_equal(g2, g+g)
     end
 
+    # == Graph#| == #
+    
+    def test_empty_graph_OR_empty_graph
+        empty = Graph.new
+
+        assert_equal(empty, empty|empty)
+    end
+    
+    def test_empty_graph_OR_sample_graph
+        g = @@sample_graph
+        empty = Graph.new
+
+        assert_equal(g, empty|g)
+        assert_equal(g, g|empty)
+    end
+    
+    def test_sample_graph_OR_itself
+        g = @@sample_graph
+
+        assert_equal(g, g|g)
+    end
+    
+    def test_sample_graph_OR_other_sample_graph
+        g1 = @@sample_graph
+        g2 = @@sample_graph_1
+        g3 = Graph.new(g1.nodes|g2.nodes, g1.edges|g2.edges)
+        g4 = Graph.new(g2.nodes|g1.nodes, g2.edges|g1.edges)
+
+        assert_equal(g3, g1|g2)
+        assert_equal(g4, g2|g1)
+    end
+
     # == Graph#- == #
     
     def test_empty_graph_minus_empty_graph
