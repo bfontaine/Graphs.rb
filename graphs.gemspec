@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name          = 'graphs'
-    s.version       = '0.1.4'
+    s.version       = '0.1.5'
     s.date          = Time.now
 
     s.summary       = 'Utilities to manipulate graph files'
