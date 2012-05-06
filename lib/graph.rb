@@ -53,6 +53,8 @@ class Graph
             self.map! { |e| e.update(@defaults) }
         end
 
+        # Add the given node at the end of the list
+        # @param o [Node]
         def push(o)
             if (!o.is_a?(Hash))
                 raise TypeError.new "#{o.inspect} is not an Hash!"
@@ -84,7 +86,7 @@ class Graph
         if (!other.is_a?(Graph))
             return false
         end
-        (self.nodes === other.nodes) && (self.edges == other.edges)
+        (self.nodes === other.nodes) && (self.edges === other.edges)
     end
 
     # Perform an intersection between the current graph and the other.
