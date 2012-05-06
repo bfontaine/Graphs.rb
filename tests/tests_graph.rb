@@ -474,6 +474,48 @@ class Graph_test < Test::Unit::TestCase
         assert_equal(empty, g.not(g))
     end
 
+    # == Graph::union == #
+
+    def test_union_one_empty_graph
+        empty = Graph.new
+        assert(empty, Graph::union(empty))
+    end
+
+    def test_union_3_empty_graph
+        empty = Graph.new
+        assert(empty, Graph::union(empty, empty, empty))
+    end
+    
+    def test_union_empty_graph_and_sample_graph
+        g = @@sample_graph
+        empty = Graph.new
+
+        assert_equal(g, Graph::union(empty, g))
+        assert_equal(g, Graph::union(g, empty))
+    end
+    
+    def test_union_sample_graph_and_itself
+        g = @@sample_graph
+
+        assert_equal(g, Graph::intersection(g, g))
+        assert_equal(g, Graph::intersection(g, g, g, g))
+    end
+    
+    def test_union_sample_graph_and_other_sample_graph
+        g1 = @@sample_graph
+        g2 = @@sample_graph_1
+        g3 = Graph.new(g1.nodes|g2.nodes, g1.edges|g2.edges)
+        g4 = Graph.new(g2.nodes|g1.nodes, g2.edges|g1.edges)
+
+        assert_equal(g3, Graph::union(g1, g2))
+        assert_equal(g3, Graph::union(g1, g1, g2))
+        assert_equal(g3, Graph::union(g1, g2, g2))
+
+        assert_equal(g4, Graph::union(g2, g1))
+        assert_equal(g4, Graph::union(g2, g2, g1))
+        assert_equal(g4, Graph::union(g2, g1, g1))
+    end
+
     # == Graph#write == #
 
     def test_graph_write_no_ext
