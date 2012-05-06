@@ -7,37 +7,41 @@ require 'graph'
 
 class Graph_test < Test::Unit::TestCase
 
-    @@sample_graph = Graph.new(
-        [
-            {'label'=>'foo', 'id'=>2},
-            {'label'=>'bar', 'id'=>1},
-            {'label'=>'chuck', 'id'=>3}
-        ],
-        [
-            {'node1'=>'foo', 'node2'=>'bar'},
-            {'node1'=>'bar', 'node2'=>'foo'},
-            {'node1'=>'bar', 'node2'=>'chuck'},
-            {'node1'=>'foo', 'node2'=>'chuck'}
-        ]
-    )
+    def setup
+        @@sample_graph = Graph.new(
+            [
+                {'label'=>'foo', 'id'=>2},
+                {'label'=>'bar', 'id'=>1},
+                {'label'=>'chuck', 'id'=>3}
+            ],
+            [
+                {'node1'=>'foo', 'node2'=>'bar'},
+                {'node1'=>'bar', 'node2'=>'foo'},
+                {'node1'=>'bar', 'node2'=>'chuck'},
+                {'node1'=>'foo', 'node2'=>'chuck'}
+            ]
+        )
 
-    @@sample_graph_1 = Graph.new(
-        [
-            {'label'=>'bar', 'num'=>3},
-            {'label'=>'foo', 'num'=>42},
-            {'label'=>'chuck', 'num'=>78}
-        ],
-        [
-            {'node1'=>'foo', 'node2'=>'bar', 'time'=>1.0},
-            {'node1'=>'bar', 'node2'=>'foo', 'time'=>2.5},
-            {'node1'=>'foo', 'node2'=>'chuck', 'time'=>3.1}
-        ]
-    )
+        @@sample_graph_1 = Graph.new(
+            [
+                {'label'=>'bar', 'num'=>3},
+                {'label'=>'foo', 'num'=>42},
+                {'label'=>'chuck', 'num'=>78}
+            ],
+            [
+                {'node1'=>'foo', 'node2'=>'bar', 'time'=>1.0},
+                {'node1'=>'bar', 'node2'=>'foo', 'time'=>2.5},
+                {'node1'=>'foo', 'node2'=>'chuck', 'time'=>3.1}
+            ]
+        )
+
+        @@empty = Graph.new
+    end
 
     # == Graph#attrs == #
 
     def test_graph_attrs
-        g = Graph.new
+        g = @@empty
         assert_equal({}, g.attrs)
 
         g.attrs['mode'] = 'static'
@@ -55,14 +59,14 @@ class Graph_test < Test::Unit::TestCase
     end
 
     def test_intersection_2_empty_graphs
-        g = Graph.new
+        g = @@empty
         h = g.clone
 
         assert_equal(h, Graph::intersection(g, g))
     end
 
     def test_intersection_4_empty_graphs_intersection
-        g = Graph.new
+        g = @@empty
         h = g.clone
 
         assert_equal(h, Graph::intersection(g, g, g, g))
@@ -70,10 +74,8 @@ class Graph_test < Test::Unit::TestCase
 
     def test_intersection_one_node_graph_and_empty_graph
         g = Graph.new([{'label'=>'foo'}])
-        empty = Graph.new
-        empty2 = empty.clone
 
-        assert_equal(empty2, Graph::intersection(g, empty))
+        assert_equal(@@empty, Graph::intersection(g, @@empty))
     end
 
     def test_intersection_sample_graph_and_itself_5_times
@@ -85,18 +87,15 @@ class Graph_test < Test::Unit::TestCase
 
     def test_intersection_sample_graph_and_itself_5_times_and_empty_graph
         g = @@sample_graph
-        empty = Graph.new
-        empty2 = empty.clone
 
-        assert_equal(empty2, Graph::intersection(g, g, empty, g, g, g))
+        assert_equal(@@empty, Graph::intersection(g, g, @@empty, g, g, g))
     end
 
     def test_intersection_one_node_graph_and_one_other_node_graph
         g = Graph.new([{'label'=>'foo'}])
         h = Graph.new([{'label'=>'bar'}])
-        empty = Graph.new
-
-        assert_equal(empty, Graph::intersection(g, h))
+        
+        assert_equal(@@empty, Graph::intersection(g, h))
     end
 
     def test_intersection_sample_graph_and_no_graph
@@ -112,9 +111,8 @@ class Graph_test < Test::Unit::TestCase
     def test_intersection_2_graphs_same_nodes_different_fields
         g1 = @@sample_graph.clone
         g2 = @@sample_graph_1.clone
-        empty = Graph.new
-
-        assert_equal(empty, Graph::intersection(g1, g2))
+        
+        assert_equal(@@empty, Graph::intersection(g1, g2))
         # test for side effects
         assert_equal(@@sample_graph, g1)
         assert_equal(@@sample_graph_1, g2)
@@ -146,7 +144,7 @@ class Graph_test < Test::Unit::TestCase
     # == Graph#new == #
 
     def test_new_empty_graph
-        g = Graph.new
+        g = @@empty
 
         assert_equal([], g.nodes)
         assert_equal([], g.edges)
@@ -155,7 +153,7 @@ class Graph_test < Test::Unit::TestCase
     # == Graph#clone == #
 
     def test_empty_graph_clone
-        g = Graph.new
+        g = @@empty
         h = g.clone
 
         assert_equal(g, h)
@@ -221,9 +219,8 @@ class Graph_test < Test::Unit::TestCase
     end
 
     def test_edgearray_set_default_existing_property
-        g = Graph.new([],
-                           [{'node1'=>'foo', 'node2'=>'bar', 'directed'=>true},
-                            {'node1'=>'bar', 'node2'=>'foo'}])
+        g = Graph.new([], [{'node1'=>'foo', 'node2'=>'bar', 'directed'=>true},
+                           {'node1'=>'bar', 'node2'=>'foo'}])
         g.edges.set_default 'directed' => false
 
         assert_equal(false, g.edges[0]['directed'])
@@ -251,24 +248,21 @@ class Graph_test < Test::Unit::TestCase
     # == Graph#& == #
 
     def test_AND_2_empty_graphs
-        g1 = Graph.new
-        g2 = Graph.new
+        g1 = g2 = @@empty
 
         assert_equal(g1, g1 & g2)
     end
 
     def test_one_node_graph_AND_empty_graph
         g = Graph.new([{'label'=>'foo'}])
-        empty = Graph.new
-
-        assert_equal(empty, g & empty)
+        
+        assert_equal(@@empty, g & @@empty)
     end
 
     def test_empty_graph_AND_one_node_graph
         g = Graph.new([{'label'=>'foo'}])
-        empty = Graph.new
-
-        assert_equal(empty, empty & g)
+        
+        assert_equal(@@empty, @@empty & g)
     end
 
     def test_sample_graph_AND_itself
@@ -280,9 +274,8 @@ class Graph_test < Test::Unit::TestCase
     def test_one_node_graph_AND_one_other_node_graph
         g = Graph.new([{'label'=>'foo'}])
         h = Graph.new([{'label'=>'bar'}])
-        empty = Graph.new
-
-        assert_equal(empty, g & h)
+        
+        assert_equal(@@empty, g & h)
     end
 
     def test_sample_graph_AND_no_graph
@@ -299,37 +292,33 @@ class Graph_test < Test::Unit::TestCase
     def test_AND_2_graphs_same_nodes_different_labels
         g1 = @@sample_graph
         g2 = @@sample_graph_1
-        empty = Graph.new
-
-        assert_equal(empty, g1 & g2)
+        
+        assert_equal(@@empty, g1 & g2)
     end
 
     # == Graph#^ == #
 
     def test_XOR_2_empty_graphs
-        g = Graph.new
+        g = @@empty
         assert_equal(g, g ^ g)
     end
 
     def test_one_node_graph_XOR_empty_graph
         g = Graph.new([{'label'=>'foo'}])
-        empty = Graph.new
-
-        assert_equal(g, g ^ empty)
+        
+        assert_equal(g, g ^ @@empty)
     end
 
     def test_empty_graph_XOR_one_node_graph
         g = Graph.new([{'label'=>'foo'}])
-        empty = Graph.new
-
-        assert_equal(g, empty ^ g)
+        
+        assert_equal(g, @@empty ^ g)
     end
 
     def test_sample_graph_XOR_itself
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(empty, g ^ g)
+        
+        assert_equal(@@empty, g ^ g)
     end
 
     def test_one_node_graph_XOR_one_other_node_graph
@@ -364,17 +353,14 @@ class Graph_test < Test::Unit::TestCase
     # == Graph#+ == #
     
     def test_empty_graph_plus_empty_graph
-        empty = Graph.new
-
-        assert_equal(empty, empty+empty)
+        assert_equal(@@empty, @@empty+@@empty)
     end
     
     def test_empty_graph_plus_sample_graph
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(g, empty+g)
-        assert_equal(g, g+empty)
+        
+        assert_equal(g, @@empty+g)
+        assert_equal(g, g+@@empty)
     end
     
     def test_sample_graph_plus_itself
@@ -387,17 +373,14 @@ class Graph_test < Test::Unit::TestCase
     # == Graph#| == #
     
     def test_empty_graph_OR_empty_graph
-        empty = Graph.new
-
-        assert_equal(empty, empty|empty)
+        assert_equal(@@empty, @@empty|@@empty)
     end
     
     def test_empty_graph_OR_sample_graph
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(g, empty|g)
-        assert_equal(g, g|empty)
+        
+        assert_equal(g, @@empty|g)
+        assert_equal(g, g|@@empty)
     end
     
     def test_sample_graph_OR_itself
@@ -419,79 +402,66 @@ class Graph_test < Test::Unit::TestCase
     # == Graph#- == #
     
     def test_empty_graph_minus_empty_graph
-        empty = Graph.new
-
-        assert_equal(empty, empty-empty)
+        assert_equal(@@empty, @@empty-@@empty)
     end
     
     def test_empty_graph_minus_sample_graph
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(empty, empty-g)
+        
+        assert_equal(@@empty, @@empty-g)
     end
     
     def test_sample_graph_minus_empty_graph
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(g, g-empty)
+        
+        assert_equal(g, g-@@empty)
     end
     
     def test_sample_graph_minus_itself
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(empty, g-g)
+        
+        assert_equal(@@empty, g-g)
     end
 
     # == Graph#not == #
     
     def test_empty_graph_NOT_empty_graph
-        empty = Graph.new
-
-        assert_equal(empty, empty.not(empty))
+        assert_equal(@@empty, @@empty.not(@@empty))
     end
     
     def test_empty_graph_NOT_sample_graph
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(empty, empty.not(g))
+        
+        assert_equal(@@empty, @@empty.not(g))
     end
     
     def test_sample_graph_NOT_empty_graph
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(g, g.not(empty))
+        
+        assert_equal(g, g.not(@@empty))
     end
     
     def test_sample_graph_NOT_itself
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(empty, g.not(g))
+        
+        assert_equal(@@empty, g.not(g))
     end
 
     # == Graph::union == #
 
     def test_union_one_empty_graph
-        empty = Graph.new
-        assert_equal(empty, Graph::union(empty))
+        assert_equal(@@empty, Graph::union(@@empty))
     end
 
     def test_union_3_empty_graph
-        empty = Graph.new
-        assert_equal(empty, Graph::union(empty, empty, empty))
+        assert_equal(@@empty, Graph::union(@@empty, @@empty, @@empty))
     end
     
     def test_union_empty_graph_and_sample_graph
         g = @@sample_graph
-        empty = Graph.new
-
-        assert_equal(g, Graph::union(empty, g))
-        assert_equal(g, Graph::union(g, empty))
+        
+        assert_equal(g, Graph::union(@@empty, g))
+        assert_equal(g, Graph::union(g, @@empty))
     end
     
     def test_union_sample_graph_and_itself
@@ -514,6 +484,46 @@ class Graph_test < Test::Unit::TestCase
         assert_equal(g4, Graph::union(g2, g1))
         assert_equal(g4, Graph::union(g2, g2, g1))
         assert_equal(g4, Graph::union(g2, g1, g1))
+    end
+    
+    # == Graph::xor == #
+
+    def test_xor_one_empty_graph
+        assert_equal(@@empty, Graph::xor(@@empty))
+    end
+
+    def test_xor_3_empty_graph
+        assert_equal(@@empty, Graph::xor(@@empty, @@empty, @@empty))
+    end
+    
+    def test_xor_empty_graph_and_sample_graph
+        g = @@sample_graph
+        
+        assert_equal(g, Graph::xor(@@empty, g))
+        assert_equal(g, Graph::xor(g, @@empty))
+    end
+    
+    def test_xor_sample_graph_and_itself
+        g = @@sample_graph
+
+        assert_equal(@@empty, Graph::xor(g, g))
+        assert_equal(@@empty, Graph::xor(g, g, g, g))
+    end
+    
+    def test_xor_sample_graph_and_other_sample_graph
+        g1 = @@sample_graph
+        g2 = @@sample_graph_1
+
+        def _xor(g,h)
+            [(g.nodes|h.nodes)-(g.nodes&h.nodes),
+             (g.edges|h.edges)-(g.edges&h.edges)]
+        end
+
+        g_1_2 = Graph.new(*_xor(g1,g2))
+        g_2_1 = Graph.new(*_xor(g2,g1))
+
+        assert_equal(g_1_2, Graph::xor(g1, g2))
+        assert_equal(g_2_1, Graph::xor(g2, g1))
     end
 
     # == Graph#write == #
