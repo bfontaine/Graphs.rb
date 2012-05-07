@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
     s.email         = 'batifon@yahoo.fr'
     s.homepage      = 'https://github.com/bfontaine/Graphs.rb'
 
-    s.files         = ['lib/graph.rb', 'lib/graphs/gdf.rb']
+    s.files         = ['lib/graph.rb', 'lib/graphs/gdf.rb', 'lib/graphs/gexf.rb']
     s.test_files    = Dir.glob('tests/tests_*.rb')
     s.require_path  = 'lib'
     s.platform      = Gem::Platform::CURRENT
