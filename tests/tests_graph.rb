@@ -40,9 +40,9 @@ class Graph_test < Test::Unit::TestCase
 
     # == Graph#attrs == #
 
-    def test_graph_attrs
+    def test_empty_graph_attrs
         g = @@empty
-        assert_equal({}, g.attrs)
+        assert_equal({:directed => true}, g.attrs)
 
         g.attrs['mode'] = 'static'
         g.attrs['defaultedgetype'] = 'directed'
