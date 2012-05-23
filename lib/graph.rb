@@ -8,7 +8,8 @@ require 'yaml'
 # @!attribute [rw] edges
 #   @return [EdgeArray] array of current Graph's edges
 # @!attribute [rw] attrs
-#   @return [Hash] attributes of the current Graph (e.g. author, description, …)
+#   @return [Hash] attributes of the current Graph (e.g. author, description, …).
+#   By default, the graph is directed, i.e. the :directed attribute is set to `true`.
 class Graph
 
     # Return a new Graph which is the intersection of every given graph.
@@ -86,7 +87,7 @@ class Graph
     def initialize(nodes=nil, edges=nil)
         @nodes = NodeArray.new(nodes || [])
         @edges = EdgeArray.new(edges || [])
-        @attrs = {}
+        @attrs = { :directed => true }
     end
 
     # Test if current graph has same nodes and edges as the other
@@ -148,6 +149,7 @@ class Graph
     # Perform an OR operation on the current Graph and the given one. Returns a
     # new graph which every node is in the current Graph and/or the other
     # (idem for edges).
+    # @param other [Graph]
     def |(other)
         if (!other.is_a?(Graph))
             return nil
