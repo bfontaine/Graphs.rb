@@ -1,0 +1,106 @@
+---
+# see http://www.graphviz.org/content/attrs
+:attributes:
+  
+  :arrowhead:
+    :used_by:
+      - :E
+    :type: :arrowType
+    :default: normal
+
+  :arrowsize:
+    :used_by:
+      - :E
+    :type: :double
+    :default: 1.0
+    :minimum: 0.0
+
+  :arrowtail:
+    :used_by:
+      - :E
+    :type: :arrowType
+    :default: normal
+
+
+
+:values:
+  
+  :arrowType:
+    - box
+    - crow
+    - diamond
+    - dot
+    - ediamond
+    - empty
+    - halfopen
+    - inv
+    - invdot
+    - invempty
+    - none
+    - normal
+    - obox
+    - odiamond
+    - odot
+    - open
+    - tee
+    - vee
+    - invodot
+
+  :clusterMode:
+    - global
+    - local
+    - none
+
+  :dirType:
+    - back
+    - backward
+    - forward
+    - none
+
+  :outputMode:
+    - breadthfirst
+    - edgesfirst
+    - nodesfirst
+
+  :packMode:
+    - clust
+    - graph
+    - node
+
+  :pagedir:
+    - BL
+    - BR
+    - LB
+    - LT
+    - RB
+    - RT
+    - TL
+    - TR
+
+  :quadType:
+    - fast
+    - none
+    - normal
+
+  :rankType:
+    - max
+    - min
+    - same
+    - sink
+    - source
+
+  :rankdir:
+    - BT
+    - LR
+    - RL
+    - TB
+
+  :smoothType:
+    - none
+    - avg_dist
+    - graph_dist
+    - power_dist
+    - rng
+    - spring
+    - triangle
+
