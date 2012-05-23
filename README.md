@@ -8,6 +8,26 @@ The best way is to use the `graphs` gem:
 
     gem install graphs
 
+If you want to have the latest version, clone this repo, build the gem, and
+install it:
+    
+    git clone git://github.com/bfontaine/Graphs.rb.git
+    cd Graphs.rb
+    gem build graphs.gemspec
+    gem install ./graphs-*.gem # you may want to use sudo
+
+Tests
+-----
+
+To perform the tests, clone this repo, then go into `tests` repertory, and
+execute `tests.rb`:
+
+    git clone git://github.com/bfontaine/Graphs.rb.git
+    cd Graphs.rb/tests
+    ruby tests.rb
+
+Make sure you have the latest version.
+
 Graph Class
 ===========
 
