@@ -6,25 +6,30 @@ require_relative '../graph'
 class Graph
     # Returns a Dot version of the current graph
     # @param opts [Hash] A customizable set of options
-    # @see Graphviz::unparse
+    # @see Dot::unparse
     def to_dot(opts=nil)
-        Graphviz::unparse(self, opts)
+        Dot::unparse(self, opts)
     end
 
     # Write the current graph into a Dot file. This method is used internally,
     # use Graph#write instead.
     # @param filename [String] a valid filename
-    # @see Graphviz::unparse
+    # @see Dot::unparse
     def write_dot(filename, opts=nil)
-        dot = Graphviz::unparse(self, opts)
+        dot = Dot::unparse(self, opts)
         f = File.open(filename, 'w')
         f.write(dot)
         f.close
     end
+
+    # @see Graph#write_dot
+    def write_gv(filename, opts=nil)
+        self.write_dot(filename, opts)
+    end
 end
 
-# Graphviz-related functions. Note that Graphviz use the .dot file format
-module Graphviz
+# Dot Language-related functions. Note that Dot extension is `.gv`
+module Dot
 
     # default graph name = @@default_name + @@default_name_cursor
     @@default_name = 'graph'
@@ -32,15 +37,15 @@ module Graphviz
 
     # Loads a Dot file and return a new Graph object
     # @param filename [String] a valid filename
-    # @see Graphviz::parse
+    # @see Dot::parse
     def self.load(filename)
         self.parse(File.read(filename))
     end
 
     # Parse some Dot text and return a new Graph object
     # @param content [String] a valid Dot String
-    # @see Graphviz::load
-    # @see Graphviz::unparse
+    # @see Dot::load
+    # @see Dot::unparse
     def self.parse(content)
 
         if (content.nil? || content.length == 0)
