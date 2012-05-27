@@ -5,23 +5,103 @@
   :arrowhead:
     :used_by:
       - :E
-    :type: :arrowType
+    :type:
+      - :arrowType
     :default: normal
 
   :arrowsize:
     :used_by:
       - :E
-    :type: :double
+    :type:
+      - :double
     :default: 1.0
     :minimum: 0.0
 
   :arrowtail:
     :used_by:
       - :E
-    :type: :arrowType
+    :type:
+      - :arrowType
     :default: normal
 
+  :aspect:
+    :used_by:
+      - :G
+    :type:
+      - :aspectType
 
+  :bgcolor:
+    :used_by:
+      - :G
+      - :C
+    :type:
+      - :color
+      - :colorList
+
+  :center:
+    :used_by:
+      - :G
+    :type:
+      - :bool
+    :default:
+      - :false
+
+  :charset:
+    :used_by:
+      - :G
+    :type:
+      - :string
+    :default: UTF-8
+
+  :clusterrank:
+    :used_by:
+      - :G
+    :type:
+      - :clusterMode
+    :default: local
+
+  :color:
+    :used_by:
+      - :E
+      - :N
+      - :C
+    :type:
+      - :color
+      - :colorList
+    :default: black
+
+  :colorscheme:
+    :used_by:
+      - :E
+      - :N
+      - :C
+      - :G
+    :type:
+      - :string
+    :default: ""
+
+  :comment:
+    :used_by:
+      - :E
+      - :N
+      - :G
+    :type:
+      - :string
+    :default: ""
+
+  :compound:
+    :used_by:
+      - :G
+    :type:
+      - :bool
+    :default: false
+
+  :concentrate:
+    :used_by:
+      - :G
+    :type:
+      - :bool
+    :default: false
 
 :values:
   
