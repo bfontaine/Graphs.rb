@@ -54,11 +54,15 @@ class Graph
         attr_accessor :attrs
 
         def initialize(attrs=nil)
-
-            # if the argument is a node
-            attrs = attrs.attrs if attrs.is_a?(Node)
-
             @attrs = attrs || {}
+        end
+
+        # compare two nodes
+        # @param other [Node]
+        def ==(other)
+            return false if !other.is_a?(Node)
+
+            @attrs == other.attrs
         end
 
         def method_missing(method, *args, &block)
@@ -74,11 +78,15 @@ class Graph
         attr_accessor :attrs
 
         def initialize(attrs=nil)
-
-            # if the argument is an edge
-            attrs = attrs.attrs if attrs.is_a?(Edge)
-
             @attrs = attrs || {}
+        end
+
+        # compare two edges
+        # @param other [Edge]
+        def ==(other)
+            return false if !other.is_a?(Edge)
+
+            @attrs == other.attrs
         end
 
         def method_missing(method, *args, &block)
@@ -90,9 +98,9 @@ class Graph
     # An array of Node objects
     class NodeArray < Array
 
-        def initialize(*args)
-            nodes = args.map { |n| Node.new(n) }
-            super(*nodes)
+        def initialize(li)
+            nodes = li.map { |n| n.is_a?(Node) ? n : Node.new(n) }
+            super(nodes)
             @defaults = {}
         end
 
@@ -118,9 +126,9 @@ class Graph
 
     # An array of Edge objects
     class EdgeArray < Array
-        def initialize(*args)
-            edges = args.map { |n| Edge.new(n) }
-            super(*edges)
+        def initialize(li)
+            edges = li.map { |n| n.is_a?(Edge) ? n : Edge.new(n) }
+            super(edges)
             @defaults = {}
         end
 
@@ -348,16 +356,17 @@ class Graph
         # from the arguments
         if graphs[-1].is_a?(Hash)
             return nil if graphs.length == 1
-            opts.update(graphs.pop)
+            
+            opts = graphs.pop
         end
 
         # return nil if one argument is not a graph
-        graphs.each {|g|
-                return nil if (!g.is_a?(Graph))
-        }
+        graphs.each do |g|
+                return nil if !g.is_a?(Graph)
+        end
 
         # if :same_fields option is set, call `keep_only_same_fields` function
-        *graphs = keep_only_same_fields(*graphs) if opts[:same_fields]
+        graphs = keep_only_same_fields(*graphs) if opts[:same_fields]
 
         # perform an and operation on all graph list
         graphs.inject(&block)
