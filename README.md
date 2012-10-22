@@ -1,7 +1,7 @@
 The goal of this project is to provide some useful Ruby functions to manipulate
 graph files.
 
-Note: some of the examples below are outdated, since before the 0.1.6 version,
+Note: some of the examples below are outdated, since before the 0.1.5 version,
 nodes & edges were represented as hashes, and now they are `Node` & `Edge`
 objects, respectively. However, the principles stay the sames.
 
