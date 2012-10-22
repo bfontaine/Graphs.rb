@@ -51,4 +51,15 @@ class Node_test < Test::Unit::TestCase
         assert_equal(nil,     @@alice['fooo'])
     end
 
+    def test_node_degree_by_label
+        assert_equal(2, @@sample_graph.degree_of('Alice'))
+        assert_equal(2, @@sample_graph.degree_of('Oscar'))
+        assert_equal(2, @@sample_graph.degree_of('Bob'))
+        assert_equal(0, @@sample_graph.degree_of('not found'))
+    end
+
+    def test_node_degree_by_object
+        assert_equal(2, @@sample_graph.degree_of(@@alice))
+    end
+
 end

@@ -248,15 +248,15 @@ class Graph
         Graph.new(nodes, edges)
     end
 
+    # @see Graph#-
+    def not(other)
+        self - other
+    end
+
     # Return true if the Graph is directed.
     # @see Graph.attrs
     def directed?()
         self.attrs[:directed]
-    end
-
-    # @see Graph#-
-    def not(other)
-        self - other
     end
 
     # Clone the current graph. All nodes and edges are also cloned. A new Graph
@@ -300,6 +300,33 @@ class Graph
         end
 
     end
+
+    # Return the degree of the node n in the current graph, i.e. the number
+    # of edges which are connected to this node. Note that this is useful
+    # only for a undirected graph, for a directed one, you should use
+    # Graph#in_degree_of and/or Graph#out_degree_of.
+    #
+    # Edges must have the 'node1' and 'node2' attributes, which must contain
+    # the 'label' attributes of nodes.
+    #
+    # @param n [Node,String] A node or a label of one
+    def degree_of(n)
+        label = n.is_a?(Node) \
+                      ? (n['label'] || n[:label]).to_s \
+                      : n.is_a?(String) ? n : nil
+
+        raise TypeError.new("#{n.inspect} must be a Node or String object.") if label.nil?
+
+        degree = 0
+
+        self.edges.each do |e|
+            degree += 1 if (e['node1'] || e[:node1]).to_s == label
+            degree += 1 if (e['node2'] || e[:node2]).to_s == label
+        end
+
+        degree
+    end
+
 
     # return the provided set of graphs, from which every node/edge label which
     # is not in all graphs has been removed. So every returned graph has same
