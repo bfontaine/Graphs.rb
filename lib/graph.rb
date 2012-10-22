@@ -47,11 +47,52 @@ class Graph
         perform_graphs_group_op(*graphs, &:^)
     end
 
-    # An array of nodes, each node is an hash of label/value paires
+    # A node. This class is just a wrapper around a hash of
+    # attributes since in version <= 0.1.5 nodes were simple hashes
+    class Node
+
+        attr_accessor :attrs
+
+        def initialize(attrs=nil)
+
+            # if the argument is a node
+            attrs = attrs.attrs if attrs.is_a?(Node)
+
+            @attrs = attrs || {}
+        end
+
+        def method_missing(method, *args, &block)
+            @attrs.send(method, *args, &block)
+        end
+
+    end
+
+    # An edge. This class is just a wrapper around a hash of
+    # attributes since in version <= 0.1.5 edges were simple hashes
+    class Edge
+
+        attr_accessor :attrs
+
+        def initialize(attrs=nil)
+
+            # if the argument is an edge
+            attrs = attrs.attrs if attrs.is_a?(Edge)
+
+            @attrs = attrs || {}
+        end
+
+        def method_missing(method, *args, &block)
+            @attrs.send(method, *args, &block)
+        end
+
+    end
+
+    # An array of Node objects
     class NodeArray < Array
 
         def initialize(*args)
-            super(*args)
+            nodes = args.map { |n| Node.new(n) }
+            super(*nodes)
             @defaults = {}
         end
 
@@ -65,19 +106,43 @@ class Graph
         end
 
         # Add the given node at the end of the list
-        # @param o [Node]
-        def push(o)
-            if (!o.is_a?(Hash))
-                raise TypeError.new "#{o.inspect} is not an Hash!"
+        # @param n [Node]
+        def push(n)
+            if (!n.is_a?(Hash) && !n.is_a?(Node))
+                raise TypeError.new "#{n.inspect} is not an Hash or a Node!"
             end
-            o2 = o.clone
-            o2.update(@defaults)
-            super(o2)
+
+            super(n.clone.update(@defaults))
         end
     end
 
-    # An array of edges, each edge is an hash of label/value paires
-    class EdgeArray < NodeArray
+    # An array of Edge objects
+    class EdgeArray < Array
+        def initialize(*args)
+            edges = args.map { |n| Edge.new(n) }
+            super(*edges)
+            @defaults = {}
+        end
+
+        # Set some default values for current elements.
+        # @note This method can be called multiple times.
+        # @example Set all edges's 'created-at' value to '2012-05-03'
+        #   myEdgeList.set_default({'created-at'=>'2012-05-03'})
+        # @param dict [Hash]
+        def set_default(dict)
+            @defaults.update(dict)
+            self.map! { |e| e.update(@defaults) }
+        end
+
+        # Add the given edge at the end of the list
+        # @param e [Edge]
+        def push(e)
+            if (!e.is_a?(Hash) && !e.is_a?(Edge))
+                raise TypeError.new "#{e.inspect} is not an Hash or an Edge!"
+            end
+
+            super(e.clone.update(@defaults))
+        end
     end
 
     attr_accessor :nodes, :edges, :attrs
