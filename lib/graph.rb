@@ -175,6 +175,12 @@ class Graph
         Graph.new(nodes, edges)
     end
 
+    # Return true if the Graph is directed.
+    # @see Graph.attrs
+    def directed?()
+        self.attrs[:directed]
+    end
+
     # @see Graph#-
     def not(other)
         self - other

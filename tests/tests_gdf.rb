@@ -1,7 +1,7 @@
 #! /usr/bin/ruby1.9.1
 
-require 'graph'
-require 'graphs/gdf'
+require_relative '../lib/graph'
+require_relative '../lib/graphs/gdf'
 require 'test/unit'
 
 module Utils

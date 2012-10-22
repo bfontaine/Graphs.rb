@@ -3,7 +3,7 @@
 
 require 'test/unit'
 require 'yaml'
-require 'graph'
+require_relative '../lib/graph'
 
 class Graph_test < Test::Unit::TestCase
 
@@ -43,6 +43,7 @@ class Graph_test < Test::Unit::TestCase
     def test_empty_graph_attrs
         g = @@empty
         assert_equal({:directed => true}, g.attrs)
+        assert_equal(true, g.directed?)
 
         g.attrs['mode'] = 'static'
         g.attrs['defaultedgetype'] = 'directed'
@@ -178,6 +179,9 @@ class Graph_test < Test::Unit::TestCase
     def test_nodearray_set_default_unexisting_property
         g = Graph.new([{'name'=>'foo'}, {'name'=>'bar'}])
         g.nodes.set_default 'age' => 21
+
+        assert_equal(21, g.nodes[0]['age'])
+        assert_equal(21, g.nodes[1]['age'])
 
         assert_equal(21, g.nodes[0]['age'])
         assert_equal(21, g.nodes[1]['age'])
