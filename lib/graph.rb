@@ -310,6 +310,8 @@ class Graph
     # the 'label' attributes of nodes.
     #
     # @param n [Node,String] A node or a label of one
+    # @see Graph#in_degree_of
+    # @see Graph#out_degree_of
     def degree_of(n)
         label = n.is_a?(Node) \
                       ? (n['label'] || n[:label]).to_s \
@@ -326,6 +328,33 @@ class Graph
 
         degree
     end
+
+    # Return the “in degree” of the node n in the current graph, i.e. the number
+    # of edges which are directed to this node. Note that the graph must be oriented.
+    #
+    # Edges must have the 'node1' and 'node2' attributes, which must contain
+    # the 'label' attributes of nodes.
+    #
+    # @param n [Node,String] A node or a label of one
+    # @see Graph#degree_of
+    # @see Graph#out_degree_of
+    def in_degree_of(n)
+        raise NotImplementedError.new
+    end
+
+    # Return the “out degree” of the node n in the current graph, i.e. the number
+    # of edges which are directed from this node. Note that the graph must be oriented.
+    #
+    # Edges must have the 'node1' and 'node2' attributes, which must contain
+    # the 'label' attributes of nodes.
+    #
+    # @param n [Node,String] A node or a label of one
+    # @see Graph#degree_of
+    # @see Graph#out_degree_of
+    def out_degree_of(n)
+        raise NotImplementedError.new
+    end
+
 
 
     # return the provided set of graphs, from which every node/edge label which
