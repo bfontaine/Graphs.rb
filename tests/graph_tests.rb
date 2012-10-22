@@ -471,8 +471,8 @@ class Graph_test < Test::Unit::TestCase
     def test_union_sample_graph_and_itself
         g = @@sample_graph
 
-        assert_equal(g, Graph::intersection(g, g))
-        assert_equal(g, Graph::intersection(g, g, g, g))
+        assert_equal(g, Graph::union(g, g))
+        assert_equal(g, Graph::union(g, g, g, g))
     end
     
     def test_union_sample_graph_and_other_sample_graph
