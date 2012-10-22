@@ -41,5 +41,14 @@ class Node_test < Test::Unit::TestCase
         assert_equal(g2, g1)
     end
 
+    def test_node_attrs
+        a = @@alice
+
+        a['foo'] = 'bar'
+
+        assert_equal('Alice', @@alice['label'])
+        assert_equal('bar',   @@alice['foo'])
+        assert_equal(nil,     @@alice['fooo'])
+    end
 
 end
