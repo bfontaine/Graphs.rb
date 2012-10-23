@@ -1,9 +1,6 @@
 #! /usr/bin/ruby1.9.1
 # -*- coding: UTF-8 -*-
 
-require 'test/unit'
-require_relative '../lib/graph'
-
 class Node_test < Test::Unit::TestCase
     
     def setup

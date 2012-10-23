@@ -1,8 +1,6 @@
 #! /usr/bin/ruby1.9.1
 
-require_relative '../lib/graph'
 require_relative '../lib/graphs/gdf'
-require 'test/unit'
 
 module Utils
     def self.get_sample_graph
