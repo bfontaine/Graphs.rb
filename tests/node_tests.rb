@@ -81,7 +81,7 @@ class Node_test < Test::Unit::TestCase
     end
 
     def test_node_out_degree_by_object
-        assert_equal(0, @@sample_graph.out_degree_of(@@alice))
+        assert_equal(1, @@sample_graph.out_degree_of(@@alice))
     end
 
 end
