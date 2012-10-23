@@ -313,14 +313,12 @@ class Graph
     # @see Graph#in_degree_of
     # @see Graph#out_degree_of
     def degree_of(n)
-        label = n.is_a?(Node) \
-                      ? (n['label'] || n[:label]).to_s \
-                      : n.is_a?(String) ? n : nil
-
-        raise TypeError.new("#{n.inspect} must be a Node or String object.") if label.nil?
+        label = Graph::get_label_from_node(n)
 
         degree = 0
 
+        # This is more efficient than in_degree_of(n)+out_degree_of(n)
+        # since it goes only once through the edges array
         self.edges.each do |e|
             degree += 1 if (e['node1'] || e[:node1]).to_s == label
             degree += 1 if (e['node2'] || e[:node2]).to_s == label
@@ -339,7 +337,15 @@ class Graph
     # @see Graph#degree_of
     # @see Graph#out_degree_of
     def in_degree_of(n)
-        raise NotImplementedError.new
+        label = Graph::get_label_from_node(n)
+
+        degree = 0
+
+        self.edges.each do |e|
+            degree += 1 if (e['node2'] || e[:node2]).to_s == label
+        end
+
+        degree
     end
 
     # Return the “out degree” of the node n in the current graph, i.e. the number
@@ -352,10 +358,53 @@ class Graph
     # @see Graph#degree_of
     # @see Graph#out_degree_of
     def out_degree_of(n)
-        raise NotImplementedError.new
+        label = Graph::get_label_from_node(n)
+
+        degree = 0
+
+        self.edges.each do |e|
+            degree += 1 if (e['node1'] || e[:node1]).to_s == label
+        end
+
+        degree
+    end
+
+    # Return the “in degree” of the node n in the current graph, i.e. the number
+    # of edges which are directed to this node. Note that the graph must be oriented.
+    #
+    # Edges must have the 'node1' and 'node2' attributes, which must contain
+    # the 'label' attributes of nodes.
+    #
+    # @param n [Node,String] A node or a label of one
+    # @see Graph#degree_of
+    # @see Graph#out_degree_of
+    def in_degree_of(n)
+        label = Graph::get_label_from_node(n)
+
+        degree = 0
+
+        # This is more efficient than in_degree_of(n)+out_degree_of(n)
+        # since it goes only once through the edges array
+        self.edges.each do |e|
+            degree += 1 if (e['node2'] || e[:node2]).to_s == label
+        end
+
+        degree
     end
 
 
+    # return the label of a node. Raise a TypeError exception if the argument
+    # is not a Node nor a String object.
+    # @param n [Node,String] A node with a 'label' or :label attribute, or a string
+    def Graph::get_label_from_node(n)
+        label = n.is_a?(Node) \
+                      ? (n['label'] || n[:label]).to_s \
+                      : n.is_a?(String) ? n : nil
+
+        raise TypeError.new("#{n.inspect} must be a Node or String object.") if label.nil?
+
+        label
+    end
 
     # return the provided set of graphs, from which every node/edge label which
     # is not in all graphs has been removed. So every returned graph has same

@@ -11,5 +11,7 @@ Release date: *soon*.
 New methods
 -----------
 
-- `Graph#degree_of(node)` (get the degree of a node)
+- `Graph#degree_of(node)` (get the *degree* of a node)
+- `Graph#in_degree_of(node)` (get the *in degree* of a node)
+- `Graph#out_degree_of(node)` (get the *out degree* of a node)
 - `Graph#directed?` (alias of `Graph#attrs[:directed]`)
