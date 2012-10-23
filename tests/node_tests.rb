@@ -62,4 +62,26 @@ class Node_test < Test::Unit::TestCase
         assert_equal(2, @@sample_graph.degree_of(@@alice))
     end
 
+    def test_node_in_degree_by_label
+        assert_equal(1, @@sample_graph.in_degree_of('Alice'))
+        assert_equal(2, @@sample_graph.in_degree_of('Bob'))
+        assert_equal(0, @@sample_graph.in_degree_of('Oscar'))
+        assert_equal(0, @@sample_graph.in_degree_of('not found'))
+    end
+
+    def test_node_in_degree_by_object
+        assert_equal(1, @@sample_graph.in_degree_of(@@alice))
+    end
+
+    def test_node_out_degree_by_label
+        assert_equal(1, @@sample_graph.out_degree_of('Alice'))
+        assert_equal(0, @@sample_graph.out_degree_of('Bob'))
+        assert_equal(2, @@sample_graph.out_degree_of('Oscar'))
+        assert_equal(0, @@sample_graph.out_degree_of('not found'))
+    end
+
+    def test_node_out_degree_by_object
+        assert_equal(0, @@sample_graph.out_degree_of(@@alice))
+    end
+
 end
