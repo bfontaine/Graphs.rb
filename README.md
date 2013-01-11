@@ -1,3 +1,8 @@
+Graphs.rb
+=========
+
+[![Build Status](https://travis-ci.org/bfontaine/Graphs.rb.png)](https://travis-ci.org/bfontaine/Graphs.rb)
+
 The goal of this project is to provide some useful Ruby functions to manipulate
 graph files.
 
