@@ -4,7 +4,7 @@
 require 'test/unit'
 require_relative '../lib/graph'
 
-for t in Dir.glob(File.dirname(__FILE__)+'/*_tests.rb')
+for t in Dir.glob( File.join( File.expand_path( File.dirname(__FILE__) ),  '*_tests.rb' ) )
     require t
 end
 
