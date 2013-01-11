@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 require_relative '../graph'
-require 'builder'
+# require 'builder'
 
 module GEXF
 
