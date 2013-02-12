@@ -551,4 +551,51 @@ class Graph_test < Test::Unit::TestCase
         end
         assert_equal(false, File.exists?(f))
     end
+
+    # == Graph#get_node == #
+    
+    def test_graph_get_node_unexisting_label
+
+        n = @@sample_graph.get_node 'foobar'
+
+        assert_equal(nil, n)
+    end
+    
+    def test_graph_get_node_existing_label
+
+        g = @@sample_graph;
+
+        n = g.get_node 'foo'
+
+        assert_equal(g.nodes[0], n)
+    end
+
+    # == Graph#get_neighbours == #
+
+    def test_graph_get_neighbours_unexisting_node_label
+
+        n = @@sample_graph.get_neighbours 'moo'
+
+        assert_equal([], n)
+
+    end
+
+    def test_graph_get_neighbours_unexisting_node_object
+
+        n = @@sample_graph.get_neighbours Graph::Node.new( :label => 'moo' )
+
+        assert_equal([], n)
+
+    end
+
+    def test_graph_get_neighbours
+
+        g = @@sample_graph
+
+        n = g.get_neighbours 'foo'
+
+        assert_equal([ 'bar', 'chuck' ], n.map { |m| m.label })
+
+    end
+
 end

@@ -81,4 +81,15 @@ class Node_test < Test::Unit::TestCase
         assert_equal(1, @@sample_graph.out_degree_of(@@alice))
     end
 
+    def test_node_label_attr
+        assert_equal('Alice', @@alice.label)
+    end
+
+    def test_node_update
+
+        n = Graph::Node.new
+
+        assert_equal(true, n.update({}).is_a?(Graph::Node))
+    end
+
 end

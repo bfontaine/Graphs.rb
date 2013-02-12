@@ -65,7 +65,15 @@ class Graph
             @attrs == other.attrs
         end
 
+        def update(h)
+            Node.new super(h)
+        end
+
         def method_missing(method, *args, &block)
+
+            return @attrs[method.to_sym] if @attrs.has_key? method.to_sym
+            return @attrs[method.to_s] if @attrs.has_key? method.to_s
+
             @attrs.send(method, *args, &block)
         end
 
@@ -89,7 +97,15 @@ class Graph
             @attrs == other.attrs
         end
 
+        def update(h)
+            Edge.new super(h)
+        end
+
         def method_missing(method, *args, &block)
+
+            return @attrs[method.to_sym] if @attrs.has_key? method.to_sym
+            return @attrs[method.to_s] if @attrs.has_key? method.to_s
+
             @attrs.send(method, *args, &block)
         end
 
@@ -117,11 +133,14 @@ class Graph
         # @param n [Node]
         def push(n)
             if (!n.is_a?(Hash) && !n.is_a?(Node))
-                raise TypeError.new "#{n.inspect} is not an Hash or a Node!"
+                raise TypeError.new "#{n.inspect} is not an Hash nor a Node!"
             end
+
+            n = Node.new(n) if (n.is_a?(Hash))
 
             super(n.clone.update(@defaults))
         end
+
     end
 
     # An array of Edge objects
@@ -146,11 +165,14 @@ class Graph
         # @param e [Edge]
         def push(e)
             if (!e.is_a?(Hash) && !e.is_a?(Edge))
-                raise TypeError.new "#{e.inspect} is not an Hash or an Edge!"
+                raise TypeError.new "#{e.inspect} is not an Hash nor an Edge!"
             end
+
+            e = Edge.new(e) if (e.is_a?(Hash))
 
             super(e.clone.update(@defaults))
         end
+
     end
 
     attr_accessor :nodes, :edges, :attrs
@@ -313,7 +335,7 @@ class Graph
     # @see Graph#in_degree_of
     # @see Graph#out_degree_of
     def degree_of(n)
-        label = Graph::get_label_from_node(n)
+        label = Graph::get_label(n)
 
         degree = 0
 
@@ -337,7 +359,7 @@ class Graph
     # @see Graph#degree_of
     # @see Graph#out_degree_of
     def in_degree_of(n)
-        label = Graph::get_label_from_node(n)
+        label = Graph::get_label(n)
 
         degree = 0
 
@@ -358,7 +380,7 @@ class Graph
     # @see Graph#degree_of
     # @see Graph#out_degree_of
     def out_degree_of(n)
-        label = Graph::get_label_from_node(n)
+        label = Graph::get_label(n)
 
         degree = 0
 
@@ -369,12 +391,68 @@ class Graph
         degree
     end
 
+    # return the first node which mach the given label in the current graph
+    # @param label [String] A node's label
+    def get_node(label)
+
+        label = Graph::get_label(label)
+
+        self.nodes.find { |n| n.label == label }
+
+    end
+
+    # return an array of the neighbours of a node in the current graph.
+    # @param n [Node,String] A node with a 'label' or :label attribute, or a string
+    def get_neighbours(n)
+
+        label = Graph::get_label(n)
+        neighbours = NodeArray.new []
+
+        self.edges.each do |e|
+
+            begin
+
+                l1 = e.node1
+                l2 = e.node2
+
+            rescue NoMethodError; next; end
+
+            if l2 && l1 == label
+
+                n2 = self.get_node l2
+
+                unless neighbours.include?(l2)
+
+                    neighbours.push(n2)
+
+                end
+            
+            end
+
+            if l1 && l2 == label && self.directed?
+
+                n1 = self.get_node l1
+            
+                unless neighbours.include?(n1)
+
+                    neighbours.push(n1)
+                
+                end
+            
+            end
+
+        end
+
+        neighbours
+
+    end
+
     # return the label of a node. Raise a TypeError exception if the argument
     # is not a Node nor a String object.
     # @param n [Node,String] A node with a 'label' or :label attribute, or a string
-    def Graph::get_label_from_node(n)
+    def Graph::get_label(n)
         label = n.is_a?(Node) \
-                      ? (n['label'] || n[:label]).to_s \
+                      ? n.label.to_s \
                       : n.is_a?(String) ? n : nil
 
         raise TypeError.new("#{n.inspect} must be a Node or String object.") if label.nil?
