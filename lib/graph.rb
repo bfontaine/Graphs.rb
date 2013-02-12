@@ -369,30 +369,6 @@ class Graph
         degree
     end
 
-    # Return the “in degree” of the node n in the current graph, i.e. the number
-    # of edges which are directed to this node. Note that the graph must be oriented.
-    #
-    # Edges must have the 'node1' and 'node2' attributes, which must contain
-    # the 'label' attributes of nodes.
-    #
-    # @param n [Node,String] A node or a label of one
-    # @see Graph#degree_of
-    # @see Graph#out_degree_of
-    def in_degree_of(n)
-        label = Graph::get_label_from_node(n)
-
-        degree = 0
-
-        # This is more efficient than in_degree_of(n)+out_degree_of(n)
-        # since it goes only once through the edges array
-        self.edges.each do |e|
-            degree += 1 if (e['node2'] || e[:node2]).to_s == label
-        end
-
-        degree
-    end
-
-
     # return the label of a node. Raise a TypeError exception if the argument
     # is not a Node nor a String object.
     # @param n [Node,String] A node with a 'label' or :label attribute, or a string
