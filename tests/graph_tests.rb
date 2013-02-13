@@ -36,6 +36,16 @@ class Graph_test < Test::Unit::TestCase
         )
 
         @@empty = Graph.new
+
+        @@directed = Graph.new(
+            [
+                {'label' => 'foo'},
+                {'label' => 'bar'}
+            ],
+            [ { 'node1' => 'foo', 'node2' => 'bar' }]
+        )
+
+        @@directed.attrs[:directed] = true
     end
 
     # == Graph#attrs == #
@@ -588,13 +598,25 @@ class Graph_test < Test::Unit::TestCase
 
     end
 
-    def test_graph_get_neighbours
+    def test_graph_get_neighbours_undirected_graph
 
         g = @@sample_graph
 
         n = g.get_neighbours 'foo'
 
         assert_equal([ 'bar', 'chuck' ], n.map { |m| m.label })
+
+    end
+
+    def test_graph_get_neighbours_directed_graph
+
+        g = @@directed
+
+        n = g.get_neighbours 'foo'
+        assert_equal([ 'bar' ], n.map { |m| m.label })
+
+        n = g.get_neighbours 'bar'
+        assert_equal([], n.map { |m| m.label })
 
     end
 
