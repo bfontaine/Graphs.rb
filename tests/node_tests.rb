@@ -101,3 +101,41 @@ class Node_test < Test::Unit::TestCase
     end
 
 end
+
+class NodeArray_test < Test::Unit::TestCase
+
+    def test_nodearray_push_node
+
+        n = Graph::Node.new({ :foo => 42 })
+        na = Graph::NodeArray.new([])
+
+        na.push(n)
+
+        assert_equal(n, na[0])
+
+    end
+
+    def test_nodearray_push_hash
+
+        n = { :foo => 42 }
+        na = Graph::NodeArray.new([])
+
+        na.push(n)
+
+        assert_equal(Graph::Node.new(n), na[0])
+
+    end
+
+    def test_nodearray_push_no_node_nor_hash
+
+        na = Graph::NodeArray.new([])
+
+        assert_raise(TypeError) do
+
+            na.push(42)
+
+        end
+
+    end
+
+end

@@ -52,3 +52,41 @@ class Edge_test < Test::Unit::TestCase
     end
 
 end
+
+class EdgeArray_test < Test::Unit::TestCase
+
+    def test_edgearray_push_edge
+
+        e = Graph::Edge.new({ :foo => 42 })
+        ea = Graph::EdgeArray.new([])
+
+        ea.push(e)
+
+        assert_equal(e, ea[0])
+
+    end
+
+    def test_edgearray_push_hash
+
+        e = { :foo => 42 }
+        ea = Graph::EdgeArray.new([])
+
+        ea.push(e)
+
+        assert_equal(Graph::Edge.new(e), ea[0])
+
+    end
+
+    def test_edgearray_push_no_edge_nor_hash
+
+        ea = Graph::EdgeArray.new([])
+
+        assert_raise(TypeError) do
+
+            ea.push(42)
+
+        end
+
+    end
+
+end
