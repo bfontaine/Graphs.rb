@@ -214,4 +214,11 @@ class GDF_test < Test::Unit::TestCase
         assert_equal("nodedef>n INT\n9999999999999999\nedgedef>", gdf)
 
     end
+
+    def test_unparse_float_field
+        g = Graph.new([{ 'n' => 3.14 }])
+        gdf = GDF::unparse(g)
+
+        assert_equal("nodedef>n FLOAT\n3.14\nedgedef>", gdf)
+    end
 end
