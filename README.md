@@ -85,7 +85,8 @@ g2 = JSONGraph::load('myGraph.json')
 ```
 
 You can also export a graph using the `.write` method. It guesses the format
-using the file extension.
+using the file extension. If the file extension is unknown, it uses the YAML
+format.
 
 ```ruby
 require 'graph'
