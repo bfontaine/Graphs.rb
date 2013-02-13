@@ -1,4 +1,4 @@
-#! /usr/bin/ruby1.9.1
+#! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 
 class Graph_test < Test::Unit::TestCase
@@ -178,6 +178,19 @@ class Graph_test < Test::Unit::TestCase
         g2 = @@sample_graph.clone()
 
         assert_equal(true, g1==g2)
+    end
+
+    def test_equal_graph_and_non_graph
+
+        g = Graph.new
+
+        assert_equal(false, g==[])
+        assert_equal(false, g=={})
+        assert_equal(false, g==0)
+        assert_equal(false, g==false)
+        assert_equal(false, g==nil)
+        assert_equal(false, g==Graph::Node.new)
+
     end
 
     # == Graph::NodeArray#set_default == #
@@ -380,6 +393,17 @@ class Graph_test < Test::Unit::TestCase
         assert_equal(g2, g+g)
     end
 
+    def test_graph_plus_non_graph
+
+        g = @@sample_graph
+
+        assert_equal(nil, g+42)
+        assert_equal(nil, g+[])
+        assert_equal(nil, g+{})
+        assert_equal(nil, g+Graph::Node.new)
+
+    end
+
     # == Graph#| == #
     
     def test_empty_graph_OR_empty_graph
@@ -409,6 +433,17 @@ class Graph_test < Test::Unit::TestCase
         assert_equal(g4, g2|g1)
     end
 
+    def test_graph_OR_non_graph
+
+        g = @@sample_graph
+
+        assert_equal(nil, g|42)
+        assert_equal(nil, g|[])
+        assert_equal(nil, g|{})
+        assert_equal(nil, g|Graph::Node.new)
+
+    end
+
     # == Graph#- == #
     
     def test_empty_graph_minus_empty_graph
@@ -431,6 +466,17 @@ class Graph_test < Test::Unit::TestCase
         g = @@sample_graph
         
         assert_equal(@@empty, g-g)
+    end
+
+    def test_graph_minus_non_graph
+
+        g = @@sample_graph
+
+        assert_equal(nil, g-42)
+        assert_equal(nil, g-[])
+        assert_equal(nil, g-{})
+        assert_equal(nil, g-Graph::Node.new)
+
     end
 
     # == Graph#not == #
@@ -597,10 +643,13 @@ class Graph_test < Test::Unit::TestCase
     def test_graph_get_neighbours_undirected_graph
 
         g = @@sample_graph
+        g.attrs[:directed] = false
 
-        n = g.get_neighbours 'foo'
+        n1 = g.get_neighbours 'chuck'
+        n2 = g.get_neighbours 'foo'
 
-        assert_equal([ 'bar', 'chuck' ], n.map { |m| m.label })
+        assert_equal([ 'bar', 'foo' ], n1.map { |m| m.label })
+        assert_equal([ 'bar', 'chuck' ], n2.map { |m| m.label })
 
     end
 
@@ -612,7 +661,24 @@ class Graph_test < Test::Unit::TestCase
         assert_equal([ 'bar' ], n.map { |m| m.label })
 
         n = g.get_neighbours 'bar'
-        assert_equal([], n.map { |m| m.label })
+        assert_equal([], n)
+
+    end
+
+    def test_graph_get_neighbours_bad_edges
+
+        g = Graph.new(
+            [ { :label => 'foo' },
+              { :label => 'bar' },
+              { :label => 'moo' }],
+
+            [ { :node1 => 'foo' }, # missing :node2 attr
+              { :node1 => 'foo', :node2 => 'moo' }])
+
+        n = g.get_neighbours 'foo'
+
+        assert_equal(1, n.length)
+        assert_equal('moo', n[0].label)
 
     end
 
