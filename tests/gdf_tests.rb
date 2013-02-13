@@ -1,6 +1,5 @@
 #! /usr/bin/ruby1.9.1
-
-require_relative '../lib/graphs/gdf'
+# -*- coding: UTF-8 -*-
 
 module Utils
     def self.get_sample_graph

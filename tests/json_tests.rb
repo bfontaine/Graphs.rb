@@ -1,8 +1,6 @@
 #! /usr/bin/ruby1.9.1
 # -*- coding: UTF-8 -*-
 
-require_relative '../lib/graphs/json'
-
 module JSONUtils
     def self.get_sample_graph
         @@json
