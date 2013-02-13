@@ -92,4 +92,12 @@ class Node_test < Test::Unit::TestCase
         assert_equal(true, n.update({}).is_a?(Graph::Node))
     end
 
+    def test_node_init_with_another_node
+
+        n = Graph::Node.new({ :foo => 'bar' })
+
+        assert_equal( n, Graph::Node.new(n) )
+
+    end
+
 end

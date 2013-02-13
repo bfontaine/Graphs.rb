@@ -54,7 +54,9 @@ class Graph
         attr_accessor :attrs
 
         def initialize(attrs=nil)
-            @attrs = attrs || {}
+
+            @attrs = attrs.is_a?(Node) ? attrs.attrs : attrs || {}
+
         end
 
         # compare two nodes
@@ -86,7 +88,7 @@ class Graph
         attr_accessor :attrs
 
         def initialize(attrs=nil)
-            @attrs = attrs || {}
+            @attrs = attrs.is_a?(Edge) ? attrs.attrs : attrs || {}
         end
 
         # compare two edges

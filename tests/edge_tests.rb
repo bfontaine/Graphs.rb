@@ -43,4 +43,12 @@ class Edge_test < Test::Unit::TestCase
         assert_equal(true, e.update({}).is_a?(Graph::Edge))
     end
 
+    def test_edge_init_with_another_edge
+
+        e = Graph::Edge.new({ :foo => 'bar' })
+
+        assert_equal( e, Graph::Edge.new(e) )
+
+    end
+
 end
