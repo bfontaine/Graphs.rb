@@ -25,14 +25,14 @@ install it:
 
 ## Tests
 
-To perform the tests, clone this repo, then go into `tests` repertory, and
-execute `tests.rb` (you need Ruby ≥1.9.x):
+To perform the tests, clone this repo, run `bundle install`,
+then `rake` (you need Ruby ≥1.9.x):
 
     git clone git://github.com/bfontaine/Graphs.rb.git
-    cd Graphs.rb/tests
-    ruby tests.rb
+    cd Graphs.rb
+    bundle install
+    bundle exec rake
 
-Make sure you have the latest version.
 
 ## Docs
 
