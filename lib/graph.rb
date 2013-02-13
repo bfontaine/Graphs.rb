@@ -1,3 +1,4 @@
+#! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 
 require 'yaml'
@@ -280,7 +281,7 @@ class Graph
     # Return true if the Graph is directed.
     # @see Graph.attrs
     def directed?()
-        self.attrs[:directed]
+        !!self.attrs[:directed]
     end
 
     # Clone the current graph. All nodes and edges are also cloned. A new Graph
@@ -407,23 +408,19 @@ class Graph
     # @param n [Node,String] A node with a 'label' or :label attribute, or a string
     def get_neighbours(n)
 
-        label = Graph::get_label(n)
+        label = Graph::get_label n
         neighbours = NodeArray.new []
 
         self.edges.each do |e|
 
-            begin
-
-                l1 = e.node1
-                l2 = e.node2
-
-            rescue NoMethodError; next; end
+            l1 = e[:node1] || e['node1']
+            l2 = e[:node2] || e['node2']
 
             if l2 && l1 == label
 
                 n2 = self.get_node l2
 
-                unless neighbours.include?(l2)
+                unless n2.nil? || neighbours.include?(n2)
 
                     neighbours.push(n2)
 
@@ -435,7 +432,7 @@ class Graph
 
                 n1 = self.get_node l1
             
-                unless neighbours.include?(n1)
+                unless n1.nil? || neighbours.include?(n1)
 
                     neighbours.push(n1)
                 
