@@ -429,7 +429,7 @@ class Graph
             
             end
 
-            if l1 && l2 == label && self.directed?
+            if l1 && l2 == label && !self.directed?
 
                 n1 = self.get_node l1
             
