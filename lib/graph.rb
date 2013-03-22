@@ -225,8 +225,8 @@ class Graph
             return nil
         end
 
-        nodes = (@nodes + other.nodes) - (@nodes & other.nodes)
-        edges = (@edges + other.edges) - (@edges & other.edges)
+        nodes = (@nodes - other.nodes) + (other.nodes - @nodes)
+        edges = (@edges - other.edges) + (other.edges - @edges)
 
         Graph.new(nodes, edges)
     end
