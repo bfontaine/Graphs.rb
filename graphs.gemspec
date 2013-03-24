@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name          = 'graphs'
-    s.version       = '0.1.8'
+    s.version       = '0.1.9'
     s.date          = Time.now
 
     s.summary       = 'Utilities to manipulate graph files'
@@ -10,6 +10,9 @@ Gem::Specification.new do |s|
     s.author        = 'Baptiste Fontaine'
     s.email         = 'batifon@yahoo.fr'
     s.homepage      = 'https://github.com/bfontaine/Graphs.rb'
+
+    s.signing_key   = File.expand_path('~/.gem/gem-private_key.pem')
+    s.cert_chain    = ['certs/bfontaine.pem']
 
     s.files         = ['lib/graph.rb', 'lib/graphs/gdf.rb', 'lib/graphs/json.rb']
     s.test_files    = Dir.glob('tests/*tests.rb')

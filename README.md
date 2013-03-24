@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.org/bfontaine/Graphs.rb.png)](https://travis-ci.org/bfontaine/Graphs.rb)
 
-The goal of this project is to provide some useful Ruby functions to manipulate
-graph files.
+This library allows you to perform some basic operations on graphs, with
+import/export from/to JSON and [GDF][gdf-format] files.
 
 Note: some of the examples below are outdated, since before the 0.1.5 version,
 nodes & edges were represented as hashes, and now they are `Node` & `Edge`
@@ -22,6 +22,16 @@ install it:
     cd Graphs.rb
     gem build graphs.gemspec
     gem install ./graphs-*.gem # you may want to use sudo
+
+If you want to use the high security trust policy, you need to add my public key
+as a trusted certificate (you only need to do this once):
+
+    gem cert --add <(curl -Ls https://gist.github.com/bfontaine/5233818/raw/gem-public-key.pem)
+
+Then, install the gem with the high security trust policy:
+
+    gem install t -P HighSecurity
+
 
 ## Tests
 
@@ -70,7 +80,7 @@ more informations.
 
 ### Import/Export
 
-The library currently support JSON and [GDF](http://guess.wikispot.org/The_GUESS_.gdf_format)
+The library currently support JSON and [GDF][gdf-format]
 formats.
 
 You can read from files using the `::load` methods of each module:
@@ -110,3 +120,5 @@ g.write('new_trips.gdf', {:gephi=>true})
 
 make sure that `INT` is used for all `BIGINT` fields.
 
+
+[gdf-format]: http://guess.wikispot.org/The_GUESS_.gdf_format
