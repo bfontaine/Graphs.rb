@@ -17,5 +17,4 @@ Gem::Specification.new do |s|
     s.files         = ['lib/graph.rb', 'lib/graphs/gdf.rb', 'lib/graphs/json.rb']
     s.test_files    = Dir.glob('tests/*tests.rb')
     s.require_path  = 'lib'
-    s.platform      = Gem::Platform::CURRENT
 end
