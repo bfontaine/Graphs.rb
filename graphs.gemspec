@@ -17,4 +17,9 @@ Gem::Specification.new do |s|
     s.files         = ['lib/graph.rb', 'lib/graphs/gdf.rb', 'lib/graphs/json.rb']
     s.test_files    = Dir.glob('tests/*tests.rb')
     s.require_path  = 'lib'
+
+    s.add_development_dependency 'simplecov'
+    s.add_development_dependency 'rake'
+    s.add_development_dependency 'test-unit'
+    s.add_development_dependency 'coveralls'
 end

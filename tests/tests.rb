@@ -1,13 +1,17 @@
 #! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'test/unit'
-require 'tempfile'
 require 'simplecov'
+require 'tempfile'
 
 test_dir = File.expand_path( File.dirname(__FILE__) )
 
-SimpleCov.start { add_filter '/tests/' } if ENV['COVERAGE']
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+SimpleCov.start { add_filter '/tests/' }
 
 require_relative '../lib/graph'
 require_relative '../lib/graphs/gdf'
