@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/bfontaine/Graphs.rb.png)](https://travis-ci.org/bfontaine/Graphs.rb)
 [![Gem Version](https://badge.fury.io/rb/graphs.png)](http://badge.fury.io/rb/graphs)
 [![Coverage Status](https://coveralls.io/repos/bfontaine/Graphs.rb/badge.png)](https://coveralls.io/r/bfontaine/Graphs.rb)
+[![Inline docs](http://inch-pages.github.io/github/bfontaine/Graphs.rb.png)](http://inch-pages.github.io/github/bfontaine/Graphs.rb)
 [![Dependency Status](https://gemnasium.com/bfontaine/Graphs.rb.png)](https://gemnasium.com/bfontaine/Graphs.rb)
 
 This library allows you to perform some basic operations on graphs, with
