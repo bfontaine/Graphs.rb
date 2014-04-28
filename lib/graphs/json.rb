@@ -7,7 +7,8 @@ require_relative '../graph'
 class Graph
     # Returns a JSON version of the current graph
     # @param opts [Hash] A customizable set of options
-    # @see JSONGraph::unparse
+    # @return [String]
+    # @see JSONGraph.unparse
     def to_json(opts=nil)
         JSONGraph::unparse(self, opts)
     end
@@ -15,7 +16,8 @@ class Graph
     # Write the current graph into a JSON file. This method is used internally,
     # use Graph#write instead.
     # @param filename [String] a valid filename
-    # @see JSON::unparse
+    # @return []
+    # @see JSON.unparse
     def write_json(filename, opts=nil)
         json = JSONGraph::unparse(self, opts)
         f = File.open(filename, 'w')
@@ -29,15 +31,17 @@ module JSONGraph
 
     # Loads a JSON file and return a new Graph object
     # @param filename [String] a valid filename
-    # @see JSONGraph::parse
+    # @return [Graph]
+    # @see JSONGraph.parse
     def self.load(filename)
         self.parse(File.read(filename))
     end
 
     # Parse some JSON text and return a new Graph object
     # @param content [String] a valid GDF String
-    # @see JSONGraph::load
-    # @see JSONGraph::unparse
+    # @return [Graph]
+    # @see JSONGraph.load
+    # @see JSONGraph.unparse
     def self.parse(content)
 
         if (content.nil? || content.length == 0)
@@ -55,6 +59,7 @@ module JSONGraph
     # Return a JSON String which describe the given Graph
     # @param graph [Graph]
     # @param opts [Hash] A customizable set of options
+    # @return [String]
     # @see Graph#write
     def self.unparse(graph, opts=nil)
 
@@ -63,5 +68,4 @@ module JSONGraph
 
         JSON.dump({ 'nodes' => nodes, 'edges' => edges })
     end
-
 end

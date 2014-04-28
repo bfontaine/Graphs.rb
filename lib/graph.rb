@@ -4,35 +4,32 @@
 require 'yaml'
 
 # A graph with nodes and edges
-# @!attribute [rw] nodes
-#   @return [NodeArray] array of current Graph's nodes
-# @!attribute [rw] edges
-#   @return [EdgeArray] array of current Graph's edges
-# @!attribute [rw] attrs
-#   @return [Hash] attributes of the current Graph (e.g. author, description, …).
-#   By default, the graph is directed, i.e. the :directed attribute is set to `true`.
 class Graph
 
     # Return a new Graph which is the intersection of every given graph.
     # Each node of the intersection is in every given graph (idem for edges).
     # The last argument may be a hash of options.
-    # @option options [Boolean] :same_fields use only fields which are in every
-    # graph to compare nodes/edges to perform the intersection
+    # @option options [Boolean] +:same_fields+ use only fields which are in
+    #                           every graph to compare nodes/edges to perform
+    #                           the intersection
     # @see Graph#&
-    # @see Graph::union
-    # @see Graph::xor
+    # @see Graph.union
+    # @see Graph.xor
+    # @return [Graph]
     def Graph::intersection(*graphs)
          perform_graphs_group_op(*graphs, &:&)
     end
 
-    # Return a new Graph which is the union of every given graph.
+    # Return a new {Graph} which is the union of every given graph.
     # Each node of the union is in one or more given graph(s) (idem for edges).
     # The last argument may be a hash of options.
-    # @option options [Boolean] :same_fields use only fields which are in every
-    # graph to compare nodes/edges to perform the union
+    # @option options [Boolean] +:same_fields+ use only fields which are in
+    #                           every graph to compare nodes/edges to perform
+    #                           the union
     # @see Graph#|
-    # @see Graph::intersection
-    # @see Graph::xor
+    # @see Graph.intersection
+    # @see Graph.xor
+    # @return [Graph]
     def Graph::union(*graphs)
         perform_graphs_group_op(*graphs, &:|)
     end
@@ -42,38 +39,44 @@ class Graph
     # @option options [Boolean] :same_fields use only fields which are in every
     # graph to compare nodes/edges to perform the XOR operation
     # @see Graph#^
-    # @see Graph::union
-    # @see Graph::intersection
+    # @see Graph.union
+    # @see Graph.intersection
+    # @return [Graph]
     def Graph::xor(*graphs)
         perform_graphs_group_op(*graphs, &:^)
     end
 
-    # A node. This class is just a wrapper around a hash of
-    # attributes since in version <= 0.1.5 nodes were simple hashes
+    # A node. This class is just a wrapper around a hash of attributes. Before
+    # 0.1.6, nodes were simple hashs
+    # @since 0.1.6
     class Node
 
+        # @return Node's attributes
         attr_accessor :attrs
 
+        # Create a new Node
+        # @param attrs [Node, Hash]
         def initialize(attrs=nil)
-
             @attrs = attrs.is_a?(Node) ? attrs.attrs : attrs || {}
-
         end
 
         # compare two nodes
         # @param other [Node]
+        # @return [Boolean]
         def ==(other)
             return false if !other.is_a?(Node)
 
             @attrs == other.attrs
         end
 
+        # Update the current node, like the +Hash#update+ method.
+        # @param h [Hash]
+        # @return [Node]
         def update(h)
             Node.new super(h)
         end
 
         def method_missing(method, *args, &block)
-
             return @attrs[method.to_sym] if @attrs.has_key? method.to_sym
             return @attrs[method.to_s] if @attrs.has_key? method.to_s
 
@@ -83,29 +86,36 @@ class Graph
     end
 
     # An edge. This class is just a wrapper around a hash of
-    # attributes since in version <= 0.1.5 edges were simple hashes
+    # attributes since before version 0.1.5 edges were simple hashes
+    # @since 0.1.6
     class Edge
 
+        # @return Edge's attributes
         attr_accessor :attrs
 
+        # Create a new edge
+        # @param attrs [Edge, Hash]
         def initialize(attrs=nil)
             @attrs = attrs.is_a?(Edge) ? attrs.attrs : attrs || {}
         end
 
-        # compare two edges
+        # Compare two edges
         # @param other [Edge]
+        # @return [Boolean]
         def ==(other)
             return false if !other.is_a?(Edge)
 
             @attrs == other.attrs
         end
 
+        # Update the current edge, like the +Hash#update+ method.
+        # @param h [Hash]
+        # @return [Edge]
         def update(h)
             Edge.new super(h)
         end
 
         def method_missing(method, *args, &block)
-
             return @attrs[method.to_sym] if @attrs.has_key? method.to_sym
             return @attrs[method.to_s] if @attrs.has_key? method.to_s
 
@@ -117,6 +127,8 @@ class Graph
     # An array of Node objects
     class NodeArray < Array
 
+        # Create a new +NodeArray+ from an existing +Array+.
+        # @param li [Array]
         def initialize(li)
             nodes = li.map { |n| n.is_a?(Node) ? n : Node.new(n) }
             super(nodes)
@@ -125,6 +137,8 @@ class Graph
 
         # Set some default values for current elements.
         # @note This method can be called multiple times.
+        # @param dict [Hash]
+        # @return [NodeArray]
         # @example Set all nodes's 'created-at' value to '2012-05-03'
         #   myNodeList.set_default({'created-at'=>'2012-05-03'})
         def set_default(dict)
@@ -134,6 +148,7 @@ class Graph
 
         # Add the given node at the end of the list
         # @param n [Node]
+        # @return [NodeArray]
         def push(n)
             if (!n.is_a?(Hash) && !n.is_a?(Node))
                 raise TypeError.new "#{n.inspect} is not an Hash nor a Node!"
@@ -148,6 +163,9 @@ class Graph
 
     # An array of Edge objects
     class EdgeArray < Array
+
+        # Create a new +EdgeArray+ from an existing +Array+.
+        # @param li [Array<Edge, Hash>]
         def initialize(li)
             edges = li.map { |n| n.is_a?(Edge) ? n : Edge.new(n) }
             super(edges)
@@ -166,6 +184,7 @@ class Graph
 
         # Add the given edge at the end of the list
         # @param e [Edge]
+        # @return [EdgeArray]
         def push(e)
             if (!e.is_a?(Hash) && !e.is_a?(Edge))
                 raise TypeError.new "#{e.inspect} is not an Hash nor an Edge!"
@@ -178,8 +197,16 @@ class Graph
 
     end
 
-    attr_accessor :nodes, :edges, :attrs
+    # @return [NodeArray] the graph's nodes
+    attr_accessor :nodes
 
+    # @return [EdgeArray] the graph's edges
+    attr_accessor :edges
+
+    # @return [Hash] the graph's attributes
+    attr_accessor :attrs
+
+    # Create a new +Graph+ from one set of nodes and one set of edges
     # @param nodes [Array] Nodes of the graph
     # @param edges [Array] Edges of the graph
     def initialize(nodes=nil, edges=nil)
@@ -191,6 +218,7 @@ class Graph
     # Test if current graph has same nodes and edges as the other
     # graph.
     # @param other [Graph]
+    # @return [Boolean]
     def ==(other)
         if (!other.is_a?(Graph))
             return false
@@ -202,12 +230,11 @@ class Graph
     # Returns a new Graph which nodes are both in the current graph and
     # the other (idem for edges).
     # @param other [Graph]
+    # @return [Graph]
     # @see Graph#^
-    # @see Graph::intersection
+    # @see Graph.intersection
     def &(other)
-        if (!other.is_a?(Graph))
-            return nil
-        end
+        return unless other.is_a?(Graph)
 
         nodes = @nodes & other.nodes
         edges = @edges & other.edges
@@ -215,15 +242,14 @@ class Graph
         Graph.new(nodes, edges)
     end
 
-    # Perform a XOR operation between the current graph and the other. Returns a
-    # new Graph which nodes are in the current graph or in the other, but not in
-    # both (idem for edges).
+    # Perform a XOR operation between the current graph and the other. Returns
+    # a new Graph which nodes are in the current graph or in the other, but not
+    # in both (idem for edges).
     # @param other [Graph]
+    # @return [Graph]
     # @see Graph#&
     def ^(other)
-        if (!other.is_a?(Graph))
-            return nil
-        end
+        return unless other.is_a?(Graph)
 
         nodes = (@nodes - other.nodes) + (other.nodes - @nodes)
         edges = (@edges - other.edges) + (other.edges - @edges)
@@ -233,10 +259,9 @@ class Graph
 
     # Add two graphs, keeping duplicate nodes and edges
     # @param other [Graph]
+    # @return [Graph]
     def +(other)
-        if (!other.is_a?(Graph))
-            return nil
-        end
+        return unless other.is_a?(Graph)
 
         nodes = @nodes + other.nodes
         edges = @edges + other.edges
@@ -248,11 +273,10 @@ class Graph
     # new graph which every node is in the current Graph and/or the other
     # (idem for edges).
     # @param other [Graph]
+    # @return [Graph]
     def |(other)
-        if (!other.is_a?(Graph))
-            return nil
-        end
-            
+        return unless other.is_a?(Graph)
+
         nodes = @nodes | other.nodes
         edges = @edges | other.edges
 
@@ -262,10 +286,9 @@ class Graph
     # Returns a new Graph, which is a copy of the current graph without nodes
     # and edges which are in the given Graph.
     # @param other [Graph]
+    # @return [Graph]
     def -(other)
-        if (!other.is_a?(Graph))
-            return nil
-        end
+        return unless other.is_a?(Graph)
 
         nodes = @nodes - other.nodes
         edges = @edges - other.edges
@@ -273,12 +296,13 @@ class Graph
         Graph.new(nodes, edges)
     end
 
-    # @see Graph#-
+    # (see Graph#-)
     def not(other)
         self - other
     end
 
     # Return true if the Graph is directed.
+    # @return [Boolean]
     # @see Graph.attrs
     def directed?()
         !!self.attrs[:directed]
@@ -286,6 +310,7 @@ class Graph
 
     # Clone the current graph. All nodes and edges are also cloned. A new Graph
     # is returned.
+    # @return [Graph] a new graph
     def clone()
         g = Graph.new
         g.nodes = self.nodes.clone
@@ -300,7 +325,9 @@ class Graph
     # Write the current Graph into a file.
     # @param filename [String] A valid filename
     # @param opts [Hash] A customizable set of options
-    # @option opts [Boolean] :gephi Should be <tt>true</tt> if the file will be used with Gephi.
+    # @return []
+    # @option opts [Boolean] :gephi Should be <tt>true</tt> if the file will be
+    #                        used with Gephi.
     def write(filename, opts=nil)
 
         has_ext = filename.split('.')
@@ -323,7 +350,6 @@ class Graph
         else
             raise NoMethodError.new("No method to handle #{ext} file extension.")
         end
-
     end
 
     # Return the degree of the node n in the current graph, i.e. the number
@@ -331,10 +357,11 @@ class Graph
     # only for a undirected graph, for a directed one, you should use
     # Graph#in_degree_of and/or Graph#out_degree_of.
     #
-    # Edges must have the 'node1' and 'node2' attributes, which must contain
-    # the 'label' attributes of nodes.
+    # Edges must have the +node1+ and +node2+ attributes, which must contain
+    # the +label+ attributes of nodes.
     #
     # @param n [Node,String] A node or a label of one
+    # @return [Integer]
     # @see Graph#in_degree_of
     # @see Graph#out_degree_of
     def degree_of(n)
@@ -352,13 +379,15 @@ class Graph
         degree
     end
 
-    # Return the “in degree” of the node n in the current graph, i.e. the number
-    # of edges which are directed to this node. Note that the graph must be oriented.
+    # Return the “in degree” of the node n in the current graph, i.e. the
+    # number of edges which are directed to this node. Note that the graph must
+    # be oriented.
     #
-    # Edges must have the 'node1' and 'node2' attributes, which must contain
-    # the 'label' attributes of nodes.
+    # Edges must have the +node1+ and +node2+ attributes, which must contain
+    # the +label+ attributes of nodes.
     #
     # @param n [Node,String] A node or a label of one
+    # @return [Integer]
     # @see Graph#degree_of
     # @see Graph#out_degree_of
     def in_degree_of(n)
@@ -373,13 +402,15 @@ class Graph
         degree
     end
 
-    # Return the “out degree” of the node n in the current graph, i.e. the number
-    # of edges which are directed from this node. Note that the graph must be oriented.
+    # Return the “out degree” of the node n in the current graph, i.e. the
+    # number of edges which are directed from this node. Note that the graph
+    # must be oriented.
     #
-    # Edges must have the 'node1' and 'node2' attributes, which must contain
-    # the 'label' attributes of nodes.
+    # Edges must have the +node1+ and +node2+ attributes, which must contain
+    # the +label+ attributes of nodes.
     #
-    # @param n [Node,String] A node or a label of one
+    # @param n [Node,String] A node or a node's label
+    # @return [Integer]
     # @see Graph#degree_of
     # @see Graph#out_degree_of
     def out_degree_of(n)
@@ -396,16 +427,17 @@ class Graph
 
     # return the first node which mach the given label in the current graph
     # @param label [String] A node's label
+    # @return [Node]
     def get_node(label)
-
         label = Graph::get_label(label)
 
         self.nodes.find { |n| n.label == label }
-
     end
 
     # return an array of the neighbours of a node in the current graph.
-    # @param n [Node,String] A node with a 'label' or :label attribute, or a string
+    # @param n [Node,String] A node with a 'label' or :label attribute, or a
+    #                        string
+    # @return [Array<Node>]
     def get_neighbours(n)
 
         label = Graph::get_label n
@@ -425,19 +457,19 @@ class Graph
                     neighbours.push(n2)
 
                 end
-            
+
             end
 
             if l1 && l2 == label && !self.directed?
 
                 n1 = self.get_node l1
-            
+
                 unless n1.nil? || neighbours.include?(n1)
 
                     neighbours.push(n1)
-                
+
                 end
-            
+
             end
 
         end
@@ -448,16 +480,22 @@ class Graph
 
     # return the label of a node. Raise a TypeError exception if the argument
     # is not a Node nor a String object.
-    # @param n [Node,String] A node with a 'label' or :label attribute, or a string
+    # @param n [Node,String] A node with a 'label' or :label attribute, or a
+    #                        string
+    # @return [String]
     def Graph::get_label(n)
         label = n.is_a?(Node) \
                       ? n.label.to_s \
                       : n.is_a?(String) ? n : nil
 
-        raise TypeError.new("#{n.inspect} must be a Node or String object.") if label.nil?
+         if label.nil?
+            raise TypeError.new("#{n.inspect} must be a Node or String object.")
+         end
 
         label
     end
+
+    private
 
     # return the provided set of graphs, from which every node/edge label which
     # is not in all graphs has been removed. So every returned graph has same
@@ -477,35 +515,37 @@ class Graph
             nodes_keys_uniq = nodes_keys_ref.inject {|i,e| i &= e}
             edges_keys_uniq = edges_keys_ref.inject {|i,e| i &= e}
 
-            graphs.map {|g|
-                g.nodes.map! { |n|
-                    
+            graphs.map do |g|
+                g.nodes.map! do |n|
+
                     newnode = {}
 
-                    n.each_key { |k|
+                    n.each_key do |k|
                         newnode[k] = n[k] if nodes_keys_uniq.include?(k)
-                    }
+                    end
 
                     newnode
-                }
-                g.edges.map! { |n|
-                    
+                end
+                g.edges.map! do |n|
+
                     newedge = {}
 
-                    n.each_key { |k|
+                    n.each_key do |k|
                         newedge[k] = n[k] if edges_keys_uniq.include?(k)
-                    }
+                    end
 
                     newedge
-                }
+                end
                 g
-            }
+            end
     end
 
     # Perform an operation on a graphs group
+    # @param graphs [Array<Graph>]
     # @param block [Block] operation
+    # @return [Graph]
     def Graph::perform_graphs_group_op(*graphs, &block)
-        return nil if graphs.length == 0
+        return if graphs.length == 0
 
         # options
         opts = {}
@@ -513,14 +553,13 @@ class Graph
         # if the last arg is an hash, use it as a set of options and remove it
         # from the arguments
         if graphs[-1].is_a?(Hash)
-            return nil if graphs.length == 1
-            
+            return if graphs.length == 1
             opts = graphs.pop
         end
 
         # return nil if one argument is not a graph
         graphs.each do |g|
-                return nil if !g.is_a?(Graph)
+            return if !g.is_a?(Graph)
         end
 
         # if :same_fields option is set, call `keep_only_same_fields` function
@@ -529,6 +568,4 @@ class Graph
         # perform an and operation on all graph list
         graphs.inject(&block)
     end
-
-    private_class_method :keep_only_same_fields, :perform_graphs_group_op
 end
