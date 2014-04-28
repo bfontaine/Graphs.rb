@@ -1,6 +1,10 @@
 source 'https://rubygems.org'
 
 gem 'coveralls', require: false
-gem 'rake', :group => :test
-gem 'simplecov', :require => false, :group => :test
-gem 'test-unit', :group => :test
+
+group :test do
+gem 'simplecov', :require => false
+gem 'inch', '~> 0.4.2', require: false
+gem 'rake'
+gem 'test-unit'
+end
