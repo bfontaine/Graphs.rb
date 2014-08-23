@@ -11,7 +11,12 @@ import/export from/to JSON and [GDF][gdf-format] files.
 
 Note: some of the examples below are outdated, since before the 0.1.5 version,
 nodes & edges were represented as hashes, and now they are `Node` & `Edge`
-objects, respectively. However, the principles stay the sames.
+objects, respectively. However, the principles stay the sames, and the backward
+compatibility is preserved.
+
+See the [changelog][changelog] for more info.
+
+[changelog]: https://github.com/bfontaine/Graphs.rb/wiki/Gem-versions
 
 ## Install
 
