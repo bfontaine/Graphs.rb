@@ -34,7 +34,7 @@ as a trusted certificate (you only need to do this once):
 
 Then, install the gem with the high security trust policy:
 
-    gem install t -P HighSecurity
+    gem install graphs -P HighSecurity
 
 
 ## Tests
