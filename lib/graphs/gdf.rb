@@ -181,7 +181,7 @@ module GDF
     # label of the field, and the second is its type
     # @param s
     def self.read_def(s)
-        *label, value_type = s.split /\s+/
+        *label, value_type = s.split(/\s+/)
             if /((tiny|small|medium|big)?int|integer)/i.match(value_type)
                 value_type = 'int'
             elsif /(float|real|double)/i.match(value_type)
