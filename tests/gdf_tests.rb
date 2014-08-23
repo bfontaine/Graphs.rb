@@ -57,6 +57,17 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
+    def test_parse_value_with_comma
+      code = <<EOC
+nodedef>label VARCHAR,num INT
+"foo,bar",42
+EOC
+
+      g = GDF::parse(code)
+      assert_equal(1, g.nodes.length)
+      assert_equal('foo,bar', g.nodes[0].attrs['label'])
+    end
+
     def test_parse_empty_graph_with_nodedef
 
         s = "nodedef>label VARCHAR\n" 
@@ -220,5 +231,12 @@ class GDF_test < Test::Unit::TestCase
         gdf = GDF::unparse(g)
 
         assert_equal("nodedef>n FLOAT\n3.14\nedgedef>", gdf)
+    end
+
+    def test_unparse_value_with_comma
+      g = Graph.new([{'n' => 'foo,bar'}])
+      gdf = GDF::unparse(g)
+
+      assert_equal("nodedef>n VARCHAR\n\"foo,bar\"\nedgedef>", gdf)
     end
 end
