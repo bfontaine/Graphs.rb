@@ -40,7 +40,7 @@ class JSON_Graph_test < Test::Unit::TestCase
 
     def test_empty_graph_write_json
         g = Graph.new
-        
+
         f = Tempfile.new([ 'foo', '.json' ])
         f.close
 
@@ -119,6 +119,24 @@ class JSON_test < Test::Unit::TestCase
         s = JSONGraph::unparse(g)
 
         assert_equal('{"nodes":[],"edges":[]}', s)
+    end
+
+    def test_unparse_one_node
+      g = Graph.new([{
+        'label' => 'hello',
+        'foo' => 42
+      }])
+      s = JSONGraph::unparse(g)
+      assert_equal('{"nodes":[{"label":"hello","foo":42}],"edges":[]}', s)
+    end
+
+    def test_unparse_one_edge
+      g = Graph.new([], [{
+        'label' => 'hello',
+        'foo' => 42
+      }])
+      s = JSONGraph::unparse(g)
+      assert_equal('{"nodes":[],"edges":[{"label":"hello","foo":42}]}', s)
     end
 
     def test_unparse_sample_graph
