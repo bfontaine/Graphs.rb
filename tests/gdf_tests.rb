@@ -207,6 +207,25 @@ EOC
         assert_equal([], g.edges)
     end
 
+    def test_parse_one_node_no_type
+        s = "nodedef>foo\nfoobar"
+        g = GDF::parse(s)
+
+        assert_equal(1, g.nodes.length)
+        assert_equal('foobar', g.nodes[0]['foo'])
+        assert_equal([], g.edges)
+    end
+
+    def test_parse_one_edge_no_type
+        s = "nodedef>label VARCHAR\nfoobar\nedgedef>node1,node2\nfoobar,foobar"
+        g = GDF::parse(s)
+
+        assert_equal(1, g.nodes.length)
+        assert_equal('foobar', g.nodes[0]['label'])
+        assert_equal('foobar', g.edges[0]['node1'])
+        assert_equal('foobar', g.edges[0]['node2'])
+    end
+
     def test_parse_sample_graph
         g = GDF::parse(Utils::get_sample_graph)
 
