@@ -57,6 +57,13 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
+    def test_parse_space_after_nodedef
+        g = GDF::parse("nodedef> foo VARCHAR\nbar")
+
+        assert_equal(1, g.nodes.length)
+        assert_equal('bar', g.nodes[0]['foo'])
+    end
+
     def test_parse_quoted_value
       code = <<EOC
 nodedef>label VARCHAR

@@ -84,6 +84,7 @@ module GDF
 
           if is_nodedef || is_edgedef
             line.slice!(0, is_nodedef ? nodedef_len : edgedef_len)
+            line.strip!
             defaults = is_nodedef ? PREDEFINED_NODE_PROPS : PREDEFINED_EDGE_PROPS
             current_def = line.split(fields_split).map do |l|
               read_def(l, defaults)
