@@ -27,10 +27,29 @@ class Graph
 end
 
 # GDF-related functions
+# see http://guess.wikispot.org/The_GUESS_.gdf_format
 module GDF
 
     NODEDEF = 'nodedef>'
     EDGEDEF = 'edgedef>'
+
+    # non-string predefined properties
+    PREDEFINED_NODE_PROPS = {
+      'x' => 'float',
+      'y' => 'float',
+      'visible' => 'boolean',
+      'fixed' => 'boolean',
+      'style' => 'int',
+      'width' => 'float',
+      'height' => 'float'
+    }
+    PREDEFINED_EDGE_PROPS = {
+      'visible' => 'boolean',
+      'weight' => 'float',
+      'width' => 'float',
+      'directed' => 'boolean',
+      'labelvisible' => 'boolean'
+    }
 
     # Loads a GDF file and return a new Graph object
     # @param filename [String] a valid filename
@@ -65,15 +84,18 @@ module GDF
 
           if is_nodedef || is_edgedef
             line.slice!(0, is_nodedef ? nodedef_len : edgedef_len)
-            current_def = line.split(fields_split).map { |l| read_def(l) }
+            defaults = is_nodedef ? PREDEFINED_NODE_PROPS : PREDEFINED_EDGE_PROPS
+            current_def = line.split(fields_split).map do |l|
+              read_def(l, defaults)
+            end
 
             current_set = is_nodedef ? nodes : edges
           else
             el = {}
-            fields = line.parse_csv
+            fields = line.parse_csv || [nil]
             fields.zip(current_def).each do |val,label_type|
-              label, type = label_type
-              el[label] = parse_field(val, type)
+              label, type, default = label_type
+              el[label] = parse_field(val, type, default)
             end
             current_set << el
           end
@@ -89,7 +111,7 @@ module GDF
     # @see Graph#write
     def self.unparse(graph, opts=nil)
         # nodes
-        gdf_s = 'nodedef>'
+        gdf_s = NODEDEF
 
         if (graph.nodes.length == 0)
             return gdf_s
@@ -105,7 +127,7 @@ module GDF
         end
 
         # edges
-        gdf_s += 'edgedef>'
+        gdf_s += EDGEDEF
 
         return gdf_s if graph.edges.empty?
 
@@ -146,31 +168,51 @@ module GDF
         end
     end
 
-    # read a node/edge def, and return a list which first element is the
-    # label of the field, and the second is its type
+    # read a node/edge def, and return a list where the first element is the
+    # label of the field, the second its type, and the third and last one its
+    # default value
     # @param s
-    def self.read_def(s)
-        *label, value_type = s.split(/\s+/)
-            if /((tiny|small|medium|big)?int|integer)/i.match(value_type)
-                value_type = 'int'
-            elsif /(float|real|double)/i.match(value_type)
-                value_type = 'float'
-            elsif (value_type.downcase === 'boolean')
-                value_type = 'boolean'
-            end
+    # @param defaults
+    def self.read_def(s, defaults={})
+        label, *params = s.split(/\s+/)
+        default = nil
 
-        [label.join(' '), value_type]
+        if params.empty?
+          value_type = defaults[label.downcase] || 'VARCHAR'
+        else
+          value_type = params.shift
+
+          if params.shift == 'default'
+            default = parse_field(params.shift, value_type.downcase)
+          end
+
+          if /((tiny|small|medium|big)?int|integer)/i.match(value_type)
+              value_type = 'int'
+          elsif /(float|real|double)/i.match(value_type)
+              value_type = 'float'
+          elsif (value_type.downcase === 'boolean')
+              value_type = 'boolean'
+          end
+        end
+
+        [label, value_type, default]
     end
 
     # read a field and return its value
     # @param f
     # @param value_type [String]
-    def self.parse_field(f, value_type)
+    # @param default
+    def self.parse_field(f, value_type, default=nil)
         case value_type
-        when 'int'     then f.to_i
-        when 'float'   then f.to_f
-        when 'boolean' then !(/(null|false)/i =~ f)
-        else f
+        when 'int'     then (f || default).to_i
+        when 'float'   then (f || default).to_f
+        when 'boolean' then
+          if f.nil?
+            default.nil? ? false : default
+          else
+            /^(?:null|false|)$/i !~ f
+          end
+        else f || default
         end
     end
 
