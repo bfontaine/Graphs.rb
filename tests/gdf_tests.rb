@@ -240,12 +240,20 @@ EOC
         assert_equal(g1, g2)
     end
 
+    def test_unparse_big_int
+        n = 2**40
+        g = Graph.new([{'n'=>n}])
+        gdf = GDF::unparse(g)
+
+        assert_equal("nodedef>n BIGINT\n#{n}\nedgedef>", gdf)
+    end
+
     def test_unparse_big_int_gephi
-        g = Graph.new([{'n'=>9999999999999999}])
+        n = 2**40
+        g = Graph.new([{'n'=>n}])
         gdf = GDF::unparse(g, {:gephi=>true})
 
-        assert_equal("nodedef>n INT\n9999999999999999\nedgedef>", gdf)
-
+        assert_equal("nodedef>n INT\n#{n}\nedgedef>", gdf)
     end
 
     def test_unparse_float_field

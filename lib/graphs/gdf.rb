@@ -165,10 +165,12 @@ module GDF
     def self.get_type(v, opts=nil)
         opts = opts || {}
 
-        if v.is_a?(Fixnum)
-            return 'INT'
-        elsif v.is_a?(Bignum)
-            return opts[:gephi] ? 'INT' : 'BIGINT'
+        if v.is_a?(Fixnum) || v.is_a?(Bignum)
+            if opts[:gephi] || v <= 2147483647
+              return 'INT'
+            else
+              return 'BIGINT'
+            end
         elsif v.is_a?(TrueClass) || v.is_a?(FalseClass)
             return 'BOOLEAN'
         elsif v.is_a?(Float)
