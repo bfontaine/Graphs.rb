@@ -57,6 +57,28 @@ class GDF_test < Test::Unit::TestCase
         assert_equal([], g.edges)
     end
 
+    def test_parse_quoted_value
+      code = <<EOC
+nodedef>label VARCHAR
+"foo"
+EOC
+
+      g = GDF::parse(code)
+      assert_equal(1, g.nodes.length)
+      assert_equal('foo', g.nodes[0].attrs['label'])
+    end
+
+    def test_parse_quoted_value_with_quote
+      code = <<EOC
+nodedef>label VARCHAR
+"fo""o"
+EOC
+
+      g = GDF::parse(code)
+      assert_equal(1, g.nodes.length)
+      assert_equal('fo"o', g.nodes[0].attrs['label'])
+    end
+
     def test_parse_value_with_comma
       code = <<EOC
 nodedef>label VARCHAR,num INT
@@ -231,6 +253,13 @@ EOC
         gdf = GDF::unparse(g)
 
         assert_equal("nodedef>n FLOAT\n3.14\nedgedef>", gdf)
+    end
+
+    def test_unparse_value_with_quote
+      g = Graph.new([{'n' => 'foo"bar'}])
+      gdf = GDF::unparse(g)
+
+      assert_equal("nodedef>n VARCHAR\n\"foo\"\"bar\"\nedgedef>", gdf)
     end
 
     def test_unparse_value_with_comma
