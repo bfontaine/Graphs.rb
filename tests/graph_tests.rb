@@ -682,4 +682,22 @@ class Graph_test < Test::Unit::TestCase
 
     end
 
+    # == Graph#get_label == #
+
+    def test_graph_get_label_string
+      s = "foo"
+      assert_equal(s, Graph::get_label(s))
+    end
+
+    def test_graph_get_label_node
+      s = "foo"
+      assert_equal(s, Graph::get_label(Graph::Node.new({:label => s})))
+    end
+
+    def test_graph_get_label_not_a_string_nor_a_node
+      assert_raise(TypeError) { Graph::get_label(42) }
+      assert_raise(TypeError) { Graph::get_label([]) }
+      assert_raise(TypeError) { Graph::get_label(nil) }
+    end
+
 end
