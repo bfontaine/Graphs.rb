@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 
+require 'csv'
 require_relative '../graph'
 
 class Graph
@@ -84,7 +85,7 @@ module GDF
 
         nodes.each_with_index do |n,i|
             n2 = {}
-            n = n.split(fields_split)
+            n = n.parse_csv
             n.zip(nodes_def).each do |val,label_type|
                 label, type = label_type
                 n2[label] = parse_field(val, type)
@@ -103,7 +104,7 @@ module GDF
 
         edges.each_with_index do |e,i|
             e2 = {}
-            e = e.split(fields_split)
+            e = e.parse_csv
 
             e.zip(edges_def).each do |val,label_type|
                 label, type = label_type
@@ -134,7 +135,7 @@ module GDF
         gdf_s += (nodedef.map {|nd| nd.join(' ')}).join(',') + "\n"
 
         graph.nodes.each do |n|
-            gdf_s += n.values.join(',') + "\n"
+            gdf_s += n.values.to_csv
         end
 
         # edges
@@ -148,7 +149,7 @@ module GDF
         gdf_s += (edgedef.map {|ed| ed.join(' ')}).join(',') + "\n"
 
         graph.edges.each do |e|
-            gdf_s += e.values.join(',') + "\n"
+            gdf_s += e.values.to_csv
         end
 
         gdf_s
