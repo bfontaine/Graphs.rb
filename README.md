@@ -1,6 +1,6 @@
 # Graphs.rb
 
-[![Build Status](https://travis-ci.org/bfontaine/Graphs.rb.png)](https://travis-ci.org/bfontaine/Graphs.rb)
+[![Build Status](https://travis-ci.org/bfontaine/Graphs.rb.svg?branch=master)](https://travis-ci.org/bfontaine/Graphs.rb)
 [![Gem Version](https://badge.fury.io/rb/graphs.png)](http://badge.fury.io/rb/graphs)
 [![Coverage Status](https://coveralls.io/repos/bfontaine/Graphs.rb/badge.png)](https://coveralls.io/r/bfontaine/Graphs.rb)
 [![Inline docs](http://inch-ci.org/github/bfontaine/Graphs.rb.png)](http://inch-ci.org/github/bfontaine/Graphs.rb)
