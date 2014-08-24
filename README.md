@@ -9,10 +9,9 @@
 This library allows you to perform some basic operations on graphs, with
 import/export from/to JSON and [GDF][gdf-format] files.
 
-Note: some of the examples below are outdated, since before the 0.1.5 version,
-nodes & edges were represented as hashes, and now they are `Node` & `Edge`
-objects, respectively. However, the principles stay the sames, and the backward
-compatibility is preserved.
+Note: Before the 0.1.5 version, nodes & edges were represented as hashes, and
+now they are `Node` & `Edge` objects, respectively. They behave like hashes to
+preserve the backward compatibility.
 
 See the [changelog][changelog] for more info.
 
