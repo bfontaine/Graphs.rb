@@ -29,6 +29,9 @@ end
 # GDF-related functions
 module GDF
 
+    NODEDEF = 'nodedef>'
+    EDGEDEF = 'edgedef>'
+
     # Loads a GDF file and return a new Graph object
     # @param filename [String] a valid filename
     # @see GDF.parse
@@ -46,71 +49,34 @@ module GDF
             return Graph.new([],[])
         end
 
-        content = content.split("\n")
-
-        # lines index of 'nodedef>' and 'edgedef>'
-        nodes_def_index = -1
-        edges_def_index = -1
-
-        content.each_with_index do |l,i|
-            if l.start_with? 'nodedef>'
-                nodes_def_index = i
-            elsif l.start_with? 'edgedef>'
-                edges_def_index = i
-            end
-
-            if ((nodes_def_index >= 0) && (edges_def_index >= 0))
-                break
-            end
-        end
-
-        # no edges
-        if (edges_def_index == -1)
-            edges = []
-            edges_def_index = content.length
-        else
-            edges = content[edges_def_index+1..content.length]
-        end
-
         fields_split = /[\t ]*,[\t ]*/
 
-        # only nodes lines
-        nodes = content[nodes_def_index+1..[edges_def_index-1, content.length].min] || []
+        nodedef_len, edgedef_len = NODEDEF.length, EDGEDEF.length
 
-        nodes_def = content[nodes_def_index]
-        nodes_def = nodes_def['nodedef>'.length..nodes_def.length].strip.split(fields_split)
-        nodes_def.each_index do |i|
-            nodes_def[i] = read_def(nodes_def[i])
-        end
+        current_def = nil
 
-        nodes.each_with_index do |n,i|
-            n2 = {}
-            n = n.parse_csv
-            n.zip(nodes_def).each do |val,label_type|
-                label, type = label_type
-                n2[label] = parse_field(val, type)
+        nodes, edges = [], []
+        current_set = nil
+
+        content.each_line do |line|
+          line.strip!
+          is_nodedef = line.start_with? NODEDEF
+          is_edgedef = !is_nodedef && line.start_with?(EDGEDEF)
+
+          if is_nodedef || is_edgedef
+            line.slice!(0, is_nodedef ? nodedef_len : edgedef_len)
+            current_def = line.split(fields_split).map { |l| read_def(l) }
+
+            current_set = is_nodedef ? nodes : edges
+          else
+            el = {}
+            fields = line.parse_csv
+            fields.zip(current_def).each do |val,label_type|
+              label, type = label_type
+              el[label] = parse_field(val, type)
             end
-            nodes[i] = n2
-        end
-
-          return Graph.new(nodes) if edges.empty?
-
-        # only edges lines
-        edges_def = content[edges_def_index]
-        edges_def = edges_def['edgedef>'.length..edges_def.length].strip.split(fields_split)
-        edges_def.each_index do |i|
-            edges_def[i] = read_def(edges_def[i])
-        end
-
-        edges.each_with_index do |e,i|
-            e2 = {}
-            e = e.parse_csv
-
-            e.zip(edges_def).each do |val,label_type|
-                label, type = label_type
-                e2[label] = parse_field(val, type)
-            end
-            edges[i] = e2
+            current_set << el
+          end
         end
 
         Graph.new(nodes, edges)
