@@ -76,6 +76,8 @@ class Graph
             Node.new super(h)
         end
 
+        # Tries to resolve the method as an hash key, and forward the method
+        # resolution to the underlying hash if the key doesn't exist
         def method_missing(method, *args, &block)
             return @attrs[method.to_sym] if @attrs.has_key? method.to_sym
             return @attrs[method.to_s] if @attrs.has_key? method.to_s
@@ -115,6 +117,8 @@ class Graph
             Edge.new super(h)
         end
 
+        # Tries to resolve the method as an hash key, and forward the method
+        # resolution to the underlying hash if the key doesn't exist
         def method_missing(method, *args, &block)
             return @attrs[method.to_sym] if @attrs.has_key? method.to_sym
             return @attrs[method.to_s] if @attrs.has_key? method.to_s
