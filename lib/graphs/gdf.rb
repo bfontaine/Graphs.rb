@@ -30,10 +30,13 @@ end
 # see http://guess.wikispot.org/The_GUESS_.gdf_format
 module GDF
 
+    # Node fields definition
     NODEDEF = 'nodedef>'
+
+    # Edge fields definition
     EDGEDEF = 'edgedef>'
 
-    # non-string predefined properties
+    # Non-string predefined node properties
     PREDEFINED_NODE_PROPS = {
       'x' => 'float',
       'y' => 'float',
@@ -43,6 +46,8 @@ module GDF
       'width' => 'float',
       'height' => 'float'
     }
+
+    # Non-string predefined edge properties
     PREDEFINED_EDGE_PROPS = {
       'visible' => 'boolean',
       'weight' => 'float',
