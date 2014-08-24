@@ -25,14 +25,15 @@ The best way is to use the `graphs` gem:
 
 If you want to have the latest version, clone this repo, build the gem, and
 install it:
-    
+
     git clone git://github.com/bfontaine/Graphs.rb.git
     cd Graphs.rb
     gem build graphs.gemspec
     gem install ./graphs-*.gem # you may want to use sudo
 
 If you want to use the high security trust policy, you need to add my public key
-as a trusted certificate (you only need to do this once):
+as a trusted certificate (you only need to do this once. Note: the key changed
+on August 24, 2014):
 
     gem cert --add <(curl -Ls https://gist.github.com/bfontaine/5233818/raw/gem-public-key.pem)
 
@@ -121,7 +122,7 @@ Note to [Gephi](https://github.com/gephi/gephi) users who want to export in GDF:
 You can add the `:gephi` option to `g.write(…)` if you have big numbers.
 `Graph#write` method use `BIGINT` type for big numbers, but Gephi does not
 support it and parses it as a string field. So using the following:
-    
+
 ```ruby
 g.write('new_trips.gdf', {:gephi=>true})
 ```
